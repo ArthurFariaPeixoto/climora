@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+/*
+ * Tocna de design (Tailwind v4 — CSS-first).
+ *
+ * Tokens reais (cores, tipografia, espaçamentos) serão definidos aqui quando
+ * o design final do dashboard for implementado. Por enquanto o tema usa
+ * apenas o padrão do Tailwind.
+ */
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+}
