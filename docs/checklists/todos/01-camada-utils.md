@@ -24,20 +24,26 @@ Define as regras de termo de busca (vazio, muito curto, caracteres inválidos).
 
 > Referência: arquitetura §5.6, §7 (estado derivado); stack §15 (dayjs).
 
-- [ ] `formatTemperature` lança `Not implemented` (`index.ts:7-8`) — implementar `°C`
+- [x] `formatTemperature` lança `Not implemented` (`index.ts:7-8`) — implementar `°C`
       (ex.: `"22°C"`) com arredondamento.
-- [ ] Criar formatador de vento: velocidade (km/h) e **direção em texto** (N, NE, …)
+- [x] Criar formatador de vento: velocidade (km/h) e **direção em texto** (N, NE, …)
       a partir de `Wind.degree` (arquitetura §5.6, §7).
-- [ ] Criar formatador de umidade (ex.: `"65%"`) e pressão (ex.: `"1013 hPa"`).
-- [ ] Criar formatadores de data/hora via **`src/utils/format/dayjs.ts`** (única fonte):
-  - [ ] hora curta pt-BR (ex.: `"14h"`) para `HourlyForecast.time`;
-  - [ ] dia da semana pt-BR (ex.: `"seg"`) para `DailyForecast.date`;
-  - [ ] data/hora da observação (`CurrentWeather.observedAt`);
-  - [ ] conversão **unix/UTC** obrigatória (`dayjsUtc.unix(...)`), nunca hora local do ambiente.
-- [ ] Decidir e implementar o mapeamento `condição → ícone` (lucide-react) em função pura OU
+- [x] Criar formatador de umidade (ex.: `"65%"`, clamp defensivo em [0, 100]) e pressão
+      (ex.: `"1013 hPa"`).
+- [x] Criar formatadores de data/hora via **`src/utils/format/dayjs.ts`** (única fonte):
+  - [x] hora curta pt-BR (ex.: `"14h"`) para `HourlyForecast.time`;
+  - [x] dia da semana pt-BR (ex.: `"seg"`) para `DailyForecast.date`;
+  - [x] data/hora da observação (`CurrentWeather.observedAt`) — formato `LLL`
+        (ex.: `"7 de setembro de 2026 às 14:05"`);
+  - [x] conversão **unix/UTC** obrigatória (`dayjsFromUnixSeconds` — mesma intenção de
+        `dayjsUtc.unix`, agora com API real; corrigido em `dayjs.ts`), nunca hora local
+        do ambiente.
+- [x] Decidir e implementar o mapeamento `condição → ícone` (lucide-react) em função pura OU
       no componente de UI (stack §13; decidir local — ver fase 06). Não duplicar em ambos.
-- [ ] Todas as funções permanecem puras e usam apenas `models` como entrada.
-- [ ] Criar testes em `tests/utils/format.test.ts` (temperatura, vento/direção, umidade, horas,
+      **Decidido: diferido para a fase 06** (componente de UI) para manter `utils/` sem
+      dependência de UI (§5.6) — anexo-11 item 11.
+- [x] Todas as funções permanecem puras e usam apenas `models` como entrada.
+- [x] Criar testes em `tests/utils/format.test.ts` (temperatura, vento/direção, umidade, horas,
       dias, timestamps UTC).
 
 ## 3. `src/utils/selectors/index.ts` — derivação para exibição

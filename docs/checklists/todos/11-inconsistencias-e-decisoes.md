@@ -92,3 +92,14 @@
 - **Linha de base registrada (commit `046231c`):** `npm run lint` OK, `npm run typecheck`
   OK, `npm run test` 1/1 (smoke). Garanta que cada fase conserve esses verdes antes de
   avançar.
+
+## Item 11 — domínio do mapeamento `condição → ícone` (lucide-react)
+
+- **Onde:** `01-camada-utils.md` §2; `06-feature-clima.md` §6.
+- **Decisão (fase 01):** diferido para a **fase 06**, como **componente de UI** único
+  (ex.: `components/weather/`), e **não** em `utils/format`. Motivo: `utils/` é uma camada
+  pura sem dependência de UI (§5.6) — lucide-react entrega componentes React de UI.
+- **Aplicação:** em `CurrentWeatherCard`, `HourlyForecast` e `DailyForecast` (fase 06), com
+  base em `WeatherCondition.id`/`main` — sem duplicar a lógica.
+- **Checkboxes afetados:** `01-camada-utils.md` §2 (item "condição → ícone", decidido/diferido)
+  e `06-feature-clima.md` §6 (item permanece pendente até ser implementado).
