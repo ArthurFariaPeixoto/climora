@@ -5,7 +5,7 @@ Dashboard de clima (frontend-only, API OpenWeather) — trabalho de pós-gradua�
 ## Ao finalizar QUALQUER atividade — OBRIGATÓRIO
 
 1. Revise `docs/checklists/todos/*` e marque `- [x]` cada item concluído (não conclua checkboxes sem verificação real).
-2. Atualize `README.md` e este arquivo com o que mudou (novos scripts, comportamento, decisões).
+2. Atualize `README.md` e este arquivo com o que mudou (novos scripts, comportamento, decisões) caso seja necessário.
 3. Antes de iniciar uma nova fase, leia `00-indice-e-orientacoes.md` para conhecer a ordem e o gatilho de validação das fases. Itens `⚑ anexo-11` exigem ler a decisão pendente em `11-inconsistencias-e-decisoes.md` antes de executar.
 
 Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcados E `npm run typecheck` + `npm run lint` + `npm run test` verdes; `npm run build` ao final da fase 07 e após mudanças estruturais.

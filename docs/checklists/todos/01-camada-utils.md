@@ -11,15 +11,14 @@
 
 Define as regras de termo de busca (vazio, muito curto, caracteres inválidos).
 
-- [ ] `validateSearchTerm` lança `Not implemented` (`index.ts:7-8`) — implementar as regras:
-  - [ ] termo vazio/em branco → mensagem de erro;
-  - [ ] termo muito curto (definir tamanho mínimo) → mensagem de erro;
-  - [ ] caracteres inválidos (apenas letras, espaços e acentos? definir) → mensagem de erro;
-  - [ ] termo válido → retorno "ok" (sem erro).
-- [ ] ⚑ anexo-11 (item 2): definir o tipo de retorno — `string | null` atual vs. taxonomia
-      `InvalidSearchError` (`utils/errors`). Padronizar com a arquitetura §9.
-- [ ] Função permanece pura (sem acesso a DOM/estado).
-- [ ] Criar testes em `tests/utils/validation.test.ts` (regras acima; ver fase 09).
+- [x] `validateSearchTerm` lança `Not implemented` (`index.ts:7-8`) — implementar as regras:
+  - [x] termo vazio/em branco → mensagem de erro;
+  - [x] termo muito curto (definir tamanho mínimo) → mensagem de erro;
+  - [x] caracteres inválidos (apenas letras, espaços e acentos? definir) → mensagem de erro;
+  - [x] termo válido → retorno "ok" (sem erro).
+- [x] ⚑ anexo-11 (item 2): definir o tipo de retorno — discriminated union `{ valid: true } | { valid: false; reason: InvalidSearchError }`.
+- [x] Função permanece pura (sem acesso a DOM/estado).
+- [x] Criar testes em `tests/utils/validation.test.ts` (regras acima; ver fase 09).
 
 ## 2. `src/utils/format/index.ts` — formatadores de exibição
 

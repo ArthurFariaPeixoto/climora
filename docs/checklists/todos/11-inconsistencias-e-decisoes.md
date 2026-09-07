@@ -25,9 +25,10 @@
 - **Onde:** `src/utils/validation/index.ts:7`.
 - **Conflito:** a arquitetura §9 prevê `InvalidSearchError` para busca inválida; o retorno
   genérico de string perde o "tipo" para a UI responder por estado.
-- **Resolução:** na **fase 01**, padronizar o retorno (ex.: `{ valid: true }` /
-  `{ valid: false, reason: InvalidSearchError }`) ou manter `string | null` e construir o
-  `InvalidSearchError` no hook. Escolher **um** contrato e documentar no teste.
+- **Resolução (fase 01):** discriminated union `{ valid: true } | { valid: false; reason: InvalidSearchError }`.
+  - `utils/validation` importa `InvalidSearchError` de `utils/errors` (mesma camada — permitido).
+  - A origem do erro permanece em `utils/validation` (coerente com §9.1).
+  - O hook `use-city-search` (fase 03) apenas propaga `result.reason` quando `!result.valid`.
 - **Checkbox afetado:** `01-camada-utils.md` §1.
 
 ## Item 3 — `api-client.ts` lança erro no load do módulo sem chave
