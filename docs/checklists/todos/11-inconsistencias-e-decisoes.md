@@ -103,3 +103,18 @@
   base em `WeatherCondition.id`/`main` — sem duplicar a lógica.
 - **Checkboxes afetados:** `01-camada-utils.md` §2 (item "condição → ícone", decidido/diferido)
   e `06-feature-clima.md` §6 (item permanece pendente até ser implementado).
+
+## Item 12 — estratégia de agregação do `groupHourlyByDay`
+
+- **Onde:** `src/utils/selectors/index.ts` (fase 01, §3).
+- **Ambiguidade:** o checklist pede `DailyForecast` derivado dos blocos de 3h, mas não define
+  a regra de agregação de `humidityPct`/`precipitationPct`/`windSpeedKmh` nem qual bloco elege
+  a `condition` representativa.
+- **Decisão (fase 01):**
+  - `humidityPct`, `precipitationPct` e `windSpeedKmh` = **média** do grupo (sem arredondar —
+    clamp/arredondamento ficam nos formatadores de exibição);
+  - `minC`/`maxC` = `Math.min`/`Math.max` de `temperatureC`;
+  - `condition` = condição do bloco mais próximo do **meio-dia UTC** (distância mínima a
+    `inicioDoDia + 12h`); empate → primeiro bloco do dia;
+  - `date` = início do dia em UTC (`dayjsFromUnixSeconds(time).startOf('day').unix()`).
+- **Checkbox afetado:** `01-camada-utils.md` §3.

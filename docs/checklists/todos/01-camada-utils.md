@@ -50,17 +50,17 @@ Define as regras de termo de busca (vazio, muito curto, caracteres inválidos).
 
 > Referência: arquitetura §5.6; stack §10 (previsão diária derivada dos blocos de 3h).
 
-- [ ] `groupHourlyByDay` lança `Not implemented` (`index.ts:10-11`) — implementar agregação
+- [x] `groupHourlyByDay` lança `Not implemented` (`index.ts:10-11`) — implementar agregação
       dos blocos de 3h por dia:
-  - [ ] agrupar por dia (UTC) usando dayjs;
-  - [ ] derivar `DailyForecast`: `minC`/`maxC`, `humidityPct`, `precipitationPct`,
+  - [x] agrupar por dia (UTC) usando dayjs;
+  - [x] derivar `DailyForecast`: `minC`/`maxC`, `humidityPct`, `precipitationPct`,
         `windSpeedKmh` e `condition` representativa do grupo;
-  - [ ] preservar `date` = início do dia (UTC);
-  - [ ] retornar lista ordenada por data.
+  - [x] preservar `date` = início do dia (UTC);
+  - [x] retornar lista ordenada por data.
 - [ ] (Opcional, se o dashboard precisar) outras métricas derivadas — ex.: média diária,
-      máximos, agregação para gráficos (arquitetura §5.6).
-- [ ] Funções puras, entrada `HourlyForecast[]` → saída `DailyForecast[]`.
-- [ ] Criar testes em `tests/utils/selectors.test.ts` (agrupamento, limites de dia/UTC,
+      máximos, agregação para gráficos (arquitetura §5.6). **Não implementado** (opcional).
+- [x] Funções puras, entrada `HourlyForecast[]` → saída `DailyForecast[]`.
+- [x] Criar testes em `tests/utils/selectors.test.ts` (agrupamento, limites de dia/UTC,
       ordenação, blocos vazios).
 
 ## 4. `src/utils/errors/index.ts` — taxonomia e mapa erro → mensagem/ícone
