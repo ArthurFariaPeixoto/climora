@@ -13,67 +13,76 @@
 > Já existe: `GeocodingLocationDto`, `CurrentWeatherDto`, `ForecastDto`,
 > `ForecastBlockDto`, `WeatherConditionDto`, `WindDto`.
 
-- [ ] ⚑ anexo-11 (item 4): revisar o contrato contra a **resposta real** da OpenWeather
+- [x] ⚑ anexo-11 (item 4): revisar o contrato contra a **resposta real** da OpenWeather
       (campos usados pelos adapters: `dt_txt` p/ blocos, `rain`/`snow`/`clouds` se usados,
       `sys.country` se necessário etc.).
-- [ ] Ajustar tipos conforme a revisão (nomes e unidades metric — a API entrega `metric`).
-- [ ] Documentar, em comentário, o endpoint de origem de cada DTO (`/geo/1.0/direct`,
+- [x] Ajustar tipos conforme a revisão (nomes e unidades metric — a API entrega `metric`).
+- [x] Documentar, em comentário, o endpoint de origem de cada DTO (`/geo/1.0/direct`,
       `/data/2.5/weather`, `/data/2.5/forecast`).
 
 ## 2. `src/services/endpoints/endpoints.ts` — rotas e parâmetros
 
 **Já existe:** constantes de path + `buildCitySearchQuery(term)` (limit 5, lang `pt_br`).
 
-- [ ] `buildWeatherQuery` ignora o parâmetro `_scope` (`endpoints.ts:48-57`) — implementar
+- [x] `buildWeatherQuery` ignora o parâmetro `_scope` (`endpoints.ts:48-57`) — implementar
       a derivação do escopo (TODO `endpoints.ts:44-46`):
-  - [ ] `scope === 'current'` → só clima atual (`CURRENT_WEATHER_PATH`);
-  - [ ] `scope === 'current+forecast'` → clima atual + previsão (`FORECAST_PATH`);
-  - [ ] expor função que devolve o *path* (ou parâmetro) conforme o escopo.
-- [ ] (Opcional) parametrizar `limit`/`lang` via constantes quando houver configuração
+  - [x] `scope === 'current'` → só clima atual (`CURRENT_WEATHER_PATH`);
+  - [x] `scope === 'current+forecast'` → clima atual + previsão (`FORECAST_PATH`);
+  - [x] expor função que devolve o *path* (ou parâmetro) conforme o escopo.
+- [x] (Opcional) parametrizar `limit`/`lang` via constantes quando houver configuração
       (TODO `endpoints.ts:24-25`).
-- [ ] Manter funções puras (sem acesso ao Axios).
-- [ ] Criar testes em `tests/services/endpoints.test.ts` (parâmetros exatos por escopo).
+- [x] Manter funções puras (sem acesso ao Axios).
+- [x] Criar testes em `tests/services/endpoints.test.ts` (parâmetros exatos por escopo).
 
 ## 3. `src/services/adapters/` — DTO → modelo (ADR-03)
 
 **`city.adapter.ts`:**
-- [ ] `mapCityDtoToModel` lança (`city.adapter.ts:12-14`) — mapear `GeocodingLocationDto`
+- [x] `mapCityDtoToModel` lança (`city.adapter.ts:12-14`) — mapear `GeocodingLocationDto`
       → `City` (`name`, `country`, `state?`, `lat`, `lon`; tratar `local_names` se aplicável).
+      `local_names` não consumido (`name` já localizado via `lang=pt_br`); validação
+      runtime de `name`/`country`/`lat`/`lon` → `InvalidDataError`.
 
 **`weather.adapter.ts`:**
-- [ ] `mapCurrentWeatherDtoToModel` lança (`weather.adapter.ts:11-15`):
-  - [ ] `temperatureC`, `feelsLikeC`, `minC`, `maxC`, `humidityPct`, `pressureHpa` diretos;
-  - [ ] `visibilityKm` (m → km);
-  - [ ] `precipitationPct` (`pop`), `wind.speedKmh` (m/s → km/h), `wind.degree`;
-  - [ ] `condition` (id, description, main);
-  - [ ] `observedAt` (timestamp unix);
-  - [ ] dados corrompidos/incompletos → `InvalidDataError` (arquitetura §9).
-- [ ] `mapForecastBlockDtoToHourlyModel` lança (`weather.adapter.ts:17-20`):
-  - [ ] `time` (unix), `temperatureC`, `feelsLikeC`, `humidityPct`, `precipitationPct`,
-        `windSpeedKmh`, `condition`;
-  - [ ] dados corrompidos → `InvalidDataError`.
-- [ ] Validar entradas (arrays vazios de `weather`, campos ausentes) e decidir fallback.
-- [ ] Funções puras, sem Axios/DOM.
-- [ ] Criar testes em `tests/services/adapters/*.test.ts` usando fixtures (fase 04) —
-      feliz + corrompido.
+- [x] `mapCurrentWeatherDtoToModel` lança (`weather.adapter.ts:11-15`):
+  - [x] `temperatureC`, `feelsLikeC`, `minC`, `maxC`, `humidityPct`, `pressureHpa` diretos;
+  - [x] `visibilityKm` (m → km);
+  - [x] `precipitationPct` (`pop`), `wind.speedKmh` (m/s → km/h), `wind.degree`;
+      (`precipitationPct` **omitido** no clima atual — endpoint não expõe `pop`, anexo-11 §4);
+  - [x] `condition` (id, description, main);
+  - [x] `observedAt` (timestamp unix);
+  - [x] dados corrompidos/incompletos → `InvalidDataError` (arquitetura §9).
+- [x] `mapForecastBlockDtoToHourlyModel` lança (`weather.adapter.ts:17-20`):
+  - [x] `time` (unix), `temperatureC`, `feelsLikeC`, `humidityPct`, `precipitationPct`
+        (`pop` → %), `windSpeedKmh` (m/s → km/h), `condition` (description);
+  - [x] dados corrompidos → `InvalidDataError`.
+- [x] Validar entradas (arrays vazios de `weather`, campos ausentes) e decidir fallback —
+      decisão: **sem fallback**, dado corrompido lança `InvalidDataError`.
+- [x] Funções puras, sem Axios/DOM.
+- [x] Criar testes em `tests/services/adapters/*.test.ts` usando fixtures (fase 04) —
+      feliz + corrompido. (Fixtures **inline** nos testes; migrar para `src/mocks/`
+      quando a fase 04 criar as fixtures.)
 
 ## 4. `src/services/http/errors.ts` — classificador de erros de transporte
 
 **`classifyHttpError` é identidade (`errors.ts:10-11`) — reimplementar** (stack §9):
 
-- [ ] Sem `AxiosError` → manter/marcar como erro desconhecido (ou `InvalidDataError`? definir).
-- [ ] `error.code === 'ECONNABORTED'`/timeout → `TimeoutError`.
-- [ ] `error.code` de rede (ex.: `ERR_NETWORK`) → `NetworkError`.
-- [ ] `error.code === 'ERR_CANCELED'` → cancelamento por abort: **não deve virar erro de UI**
-      (repassar/silenciar — é concorrência, ADR-06).
-- [ ] `response.status`:
-  - [ ] `401` → `UnauthorizedError` (erro de configuração, não caso de negócio);
-  - [ ] `404` → `NotFoundError` (cidade inexistente);
-  - [ ] `429` → `ServerError` (limite de taxa) ou tempo de re-try;
-  - [ ] `5xx` → `ServerError`;
-  - [ ] outros → fallback tipado.
-- [ ] Função pura e testável (mock de `AxiosError`).
-- [ ] Criar testes em `tests/services/http/errors.test.ts`.
+- [x] Sem `AxiosError` → manter/marcar como erro desconhecido (ou `InvalidDataError`? definir).
+      Decisão: **manter (passthrough)** — o erro original é repassado inalterado; preserva
+      `InvalidDataError` dos adapters e não rotula erro desconhecido.
+- [x] `error.code === 'ECONNABORTED'`/timeout → `TimeoutError` (também `ETIMEDOUT`).
+- [x] `error.code` de rede (ex.: `ERR_NETWORK`) → `NetworkError`.
+- [x] `error.code === 'ERR_CANCELED'` → cancelamento por abort: **não deve virar erro de UI**
+      (repassar/silenciar — é concorrência, ADR-06). Contrato: retorna `null`; o chamador
+      repassa o erro original de forma silenciosa.
+- [x] `response.status`:
+  - [x] `401` → `UnauthorizedError` (erro de configuração, não caso de negócio);
+  - [x] `404` → `NotFoundError` (cidade inexistente);
+  - [x] `429` → `ServerError` (limite de taxa; sem lógica de retry aqui — fica no cache/query);
+  - [x] `5xx` → `ServerError`;
+  - [x] outros → fallback tipado. Decisão: `ServerError` (status fora dos mapeados e
+        `AxiosError` sem `response`).
+- [x] Função pura e testável (mock de `AxiosError` via duck-typing `isAxiosError`).
+- [x] Criar testes em `tests/services/http/errors.test.ts`.
 
 ## 5. `src/services/http/api-client.ts` — cliente Axios (concluir TODOs)
 

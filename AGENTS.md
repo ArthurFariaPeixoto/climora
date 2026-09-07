@@ -29,8 +29,13 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
 - Datas: apenas via `dayjs` + plugin `utc` (`src/utils/format/dayjs.ts`) com unix/UTC — nunca hora local do ambiente.
 - Estado atual: bootstrap (fase 00) concluído; fase 01 (camada `utils/`) concluída
   (validação, formatadores, selectors e taxonomia de erros com `getErrorMessage`;
-  §3 opcional não implementado); fases 02–11 pendentes — código de features ainda lança
-  `Not implemented`/tem TODO.
+  §3 opcional não implementado). Fase 02 em andamento — §3 concluído:
+  `services/adapters/*` implementados (DTO → modelo, unidades e validação → `InvalidDataError`,
+  testes em `tests/services/adapters/`); §4 concluído: `classifyHttpError` implementado
+  (duck-typing `isAxiosError`, passthrough p/ não-axios, `null` p/ `ERR_CANCELED`,
+  rede/timeout/401/404/429/5xx → taxonomia, fallback `ServerError`, testes em
+  `tests/services/http/`); §5 (api-client) e §6 (repositories) pendentes — código dessas
+  camadas ainda lança `Not implemented`/tem TODO.
 
 ## Comandos
 

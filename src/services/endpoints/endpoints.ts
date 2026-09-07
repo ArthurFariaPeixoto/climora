@@ -12,6 +12,9 @@ export const GEOCODING_PATH = '/geo/1.0/direct';
 export const CURRENT_WEATHER_PATH = '/data/2.5/weather';
 export const FORECAST_PATH = '/data/2.5/forecast';
 
+export const GEOCODING_LIMIT = '5';
+export const DEFAULT_LANG = 'pt_br';
+
 interface GeoQuery {
   q: string;
   limit: string;
@@ -20,15 +23,12 @@ interface GeoQuery {
 
 /**
  * Constrói os parâmetros da busca de cidades.
- *
- * TODO: parametrizar idioma/limite conforme a configuração quando a
- * integração for implementada.
  */
 export function buildCitySearchQuery(term: string): GeoQuery {
   return {
     q: term,
-    limit: '5',
-    lang: 'pt_br',
+    limit: GEOCODING_LIMIT,
+    lang: DEFAULT_LANG,
   };
 }
 
@@ -40,19 +40,36 @@ interface WeatherQuery {
 }
 
 /**
- * Constrói os parâmetros de uma consulta de clima (`current` ou `current+forecast`).
+ * Consulta de clima resolvida conforme o escopo: paths a chamar + parâmetros.
  *
- * TODO: derivar o escopo (usa `FORECAST_PATH` quando `scope` incluir previsão)
- * quando a integração for implementada.
+ * Os endpoints de clima atual e previsão aceitam os mesmos parâmetros (stack
+ * §10) — o escopo decide os *paths*: `current` chama só o clima atual;
+ * `current+forecast` soma a previsão. A chave `appid` não entra aqui: é
+ * injetada pelo interceptor de `services/http` (ADR-12).
+ */
+export interface WeatherEndpoints {
+  paths: readonly string[];
+  params: WeatherQuery;
+}
+
+/**
+ * Constrói os paths e parâmetros de uma consulta de clima conforme o escopo.
  */
 export function buildWeatherQuery(
   city: City,
-  _scope: WeatherRequest['scope'],
-): WeatherQuery {
-  return {
+  scope: WeatherRequest['scope'],
+): WeatherEndpoints {
+  const params: WeatherQuery = {
     lat: city.lat,
     lon: city.lon,
     units: 'metric',
-    lang: 'pt_br',
+    lang: DEFAULT_LANG,
   };
+
+  const paths =
+    scope === 'current'
+      ? [CURRENT_WEATHER_PATH]
+      : [CURRENT_WEATHER_PATH, FORECAST_PATH];
+
+  return { paths, params };
 }

@@ -32,7 +32,12 @@ export interface CurrentWeather {
   humidityPct: number;
   pressureHpa: number;
   visibilityKm: number;
-  precipitationPct: number;
+  /**
+   * Probabilidade de precipitação (%). Ausente quando o clima atual não a
+   * fornece — o endpoint da OpenWeather expõe `pop` apenas na previsão. A UI
+   * esconde a métrica quando este campo não está presente (fase 06).
+   */
+  precipitationPct?: number;
   wind: Wind;
   condition: WeatherCondition;
   /** Timestamp unix (UTC) da observação. */

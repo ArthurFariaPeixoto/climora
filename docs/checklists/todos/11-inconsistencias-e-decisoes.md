@@ -47,6 +47,18 @@
   `rain`/`snow`/`clouds`; `CurrentWeatherDto` sem `sys`, `clouds`).
 - **Impacto:** campos não usados não precisam existir — só adicionar se os adapters ou
   gráficos precisarem. Revisar antes de implementar os adapters (fase 02).
+- **Resolução (fase 02, §1):**
+  - DTOs mantidos como **espelho fiel corrigido** da resposta real: conservados `icon`,
+    `local_names`, `temp_min`/`temp_max` etc., mesmo que hoje não sejam consumidos;
+  - **`pop` removido de `CurrentWeatherDto`** — `/data/2.5/weather` não o retorna
+    (confirmado na doc da OpenWeather); `pop` existe apenas nos blocos de previsão
+    (`ForecastBlockDto.pop` mantido);
+  - campos não usados não adicionados: `dt_txt` (o `time` do modelo sai do unix `dt` via
+    dayjs), `rain`/`snow`/`clouds`, `sys`, `wind.gust`;
+  - **`CurrentWeather.precipitationPct` tornou-se opcional** no modelo
+    (`src/models/CurrentWeather.ts`) — o clima atual não tem fonte para o valor; a UI
+    (fase 06) esconde a métrica quando ausente. Consequência para o §3 deste checklist
+    (adapter de clima atual): mapear `precipitationPct` somente quando presente.
 - **Checkbox afetado:** `02-camada-servicos.md` §1.
 
 ## Item 5 — Defaults globais do `QueryClient` vs `staleTime` por consulta
