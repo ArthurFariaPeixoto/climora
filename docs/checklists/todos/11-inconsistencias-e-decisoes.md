@@ -118,3 +118,24 @@
     `inicioDoDia + 12h`); empate → primeiro bloco do dia;
   - `date` = início do dia em UTC (`dayjsFromUnixSeconds(time).startOf('day').unix()`).
 - **Checkbox afetado:** `01-camada-utils.md` §3.
+
+## Item 13 — domínio do mapeamento `erro → ícone` (lucide-react)
+
+- **Onde:** `01-camada-utils.md` §4; `08-refinamentos-ui-e-design.md` (estados de interface).
+- **Decisão (fase 01):** a taxonomia de erros expõe apenas o mapa **erro → mensagem**
+  (`getErrorMessage`); o mapa **erro → ícone** fica a cargo do componente
+  `components/state/ErrorState` na **fase 08** (leitura da taxonomia por `kind`).
+  Motivo: mesmo racional do item 11 — `utils/` é camada pura sem dependência de UI (§5.6)
+  e `lucide-react` entrega componentes React de UI.
+- **Checkboxes afetados:** `01-camada-utils.md` §4 (item "erro → ícone", decidido/diferido)
+  e `08-refinamentos-ui-e-design.md`.
+
+## Item 14 — `EmptyDataState` (§9.1) não integra a união `AppError`
+
+- **Onde:** `docs/decisoes_arquiteturais.md` §9.1 (tabela lista `EmptyDataState`);
+  `src/utils/errors/index.ts` (união `AppError` com 7 tipos, sem `EmptyDataState`).
+- **Decisão (fase 01):** manter `EmptyDataState` **fora** de `AppError`. "Sucesso sem dados"
+  não é um erro: é um **estado derivado** de `success` sem payload (tipos "empty" das fases
+  03/07), tratado por `EmptyState`, não por `ErrorState`. A tabela §9.1 descreve a resposta
+  da UI, não um membro da taxonomia tipada.
+- **Checkbox afetado:** `01-camada-utils.md` §4; confirmar em `07/08-*`.

@@ -27,7 +27,10 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
 ## Convenções
 
 - Datas: apenas via `dayjs` + plugin `utc` (`src/utils/format/dayjs.ts`) com unix/UTC — nunca hora local do ambiente.
-- Estado atual: bootstrap (fase 00) concluído; fases 01–11 pendentes — código de features ainda lança `Not implemented`/tem TODO.
+- Estado atual: bootstrap (fase 00) concluído; fase 01 (camada `utils/`) concluída
+  (validação, formatadores, selectors e taxonomia de erros com `getErrorMessage`;
+  §3 opcional não implementado); fases 02–11 pendentes — código de features ainda lança
+  `Not implemented`/tem TODO.
 
 ## Comandos
 

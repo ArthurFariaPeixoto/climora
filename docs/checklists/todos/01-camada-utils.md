@@ -67,27 +67,28 @@ Define as regras de termo de busca (vazio, muito curto, caracteres inválidos).
 
 > Referência: arquitetura §9 (taxonomia + mapa em `utils/errors`); stack §8.
 
-**Já existe (`index.ts:11-53`):** interfaces `InvalidSearchError`, `NetworkError`,
+**Já existe (`index.ts:12-54`):** interfaces `InvalidSearchError`, `NetworkError`,
 `TimeoutError`, `NotFoundError`, `UnauthorizedError`, `ServerError`, `InvalidDataError`
 e a união `AppError`.
 
-Pendente (TODO em `index.ts:7-8`):
+Implementado (`getErrorMessage` em `src/utils/errors/index.ts`:56-82):
 
-- [ ] Criar função/mapa `erro → mensagem amigável` para cada tipo da taxonomia
-      (ex.: `getErrorMessage(error: AppError): string`).
-- [ ] Criar `erro → ícone` (lucide-react) ou deixar o ícone a cargo de `ErrorState`
-      (fase 08) — definir e não duplicar.
-- [ ] Exportar tipos e funções via barrel se necessário (`utils/errors/index.ts` já é o
+- [x] Criar função/mapa `erro → mensagem amigável` para cada tipo da taxonomia
+      (`getErrorMessage(error: AppError): string`).
+- [x] Criar `erro → ícone` (lucide-react) ou deixar o ícone a cargo de `ErrorState`
+      (fase 08) — definir e não duplicar. **Decidido: diferido para o `ErrorState`
+      (fase 08)** para manter `utils/` sem dependência de UI (§5.6) — anexo-11 item 13.
+- [x] Exportar tipos e funções via barrel se necessário (`utils/errors/index.ts` já é o
       ponto único).
-- [ ] Garantir que mensagens sejam apresentáveis ("Cidade não encontrada", "Sem conexão
+- [x] Garantir que mensagens sejam apresentáveis ("Cidade não encontrada", "Sem conexão
       com a internet", "Serviço indisponível, tente novamente", "Dados incompletos"…).
-- [ ] Criar testes em `tests/utils/errors.test.ts` (mensagem por tipo).
+- [x] Criar testes em `tests/utils/errors.test.ts` (mensagem por tipo).
 
 ---
 
 ## Critério de conclusão da fase 01
 
-- [ ] `npm run typecheck` e `npm run lint` passam.
-- [ ] Testes de `utils/*` criados e passando (`npm run test`).
-- [ ] Nenhum `TODO`/`Not implemented` restante em `src/utils/` (exceto o mapeamento de
-      ícone se diferido para a fase 06/08 — registrar na decisão).
+- [x] `npm run typecheck` e `npm run lint` passam.
+- [x] Testes de `utils/*` criados e passando (`npm run test`).
+- [x] Nenhum `TODO`/`Not implemented` restante em `src/utils/` (exceto o mapeamento de
+      ícone se diferido para a fase 06/08 — registrar na decisão; anexo-11 itens 11 e 13).
