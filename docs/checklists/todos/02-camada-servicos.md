@@ -89,41 +89,47 @@
 **Já existe:** instância com `baseURL` (`.env`), `timeout 10s`, interceptor de `appid`,
 validação de chave no load (lança se `VITE_WEATHER_API_KEY` ausente).
 
-- [ ] Remover o TODO em `api-client.ts:25` (abort) — definir: o sinal de abort é repassado
+- [x] Remover o TODO em `api-client.ts:25` (abort) — definir: o sinal de abort é repassado
       **nos repositórios** via config do Axios (`signal`), não no interceptor; documentar.
-- [ ] Integrar o classificador: interceptor de **resposta** (ou tratamento nos repositórios)
+- [x] Integrar o classificador: interceptor de **resposta** (ou tratamento nos repositórios)
       para que erros propagados sejam sempre `AppError` (TODO `api-client.ts:34`). Escolher um
-      único ponto e não duplicar.
-- [ ] ⚑ anexo-11 (item 3): avaliar falha cedo no load do módulo sem chave (comportamento
+      único ponto e não duplicar. **Decisão:** interceptor de resposta em `api-client.ts` —
+      os repositórios apenas propagam (exceto abort `ERR_CANCELED`, que rejeita com o erro
+      original para a query tratar como concorrência).
+- [x] ⚑ anexo-11 (item 3): avaliar falha cedo no load do módulo sem chave (comportamento
       atual) vs. erro tratado como `UnauthorizedError` na UI. Documentar a escolha.
-- [ ] Garantir que **somente** `services/http` lê `VITE_WEATHER_API_*` (ADR-12).
-- [ ] Criar teste de integração leve `http + endpoints + adapter` via MSW (stack §16).
+      **Decisão:** manter fail-early (ver `11-inconsistencias-e-decisoes.md` item 3).
+- [x] Garantir que **somente** `services/http` lê `VITE_WEATHER_API_*` (ADR-12) — verificado
+      (apenas `api-client.ts` + tipos em `vite-env.d.ts`).
+- [x] Criar teste de integração leve `http + endpoints + adapter` via MSW (stack §16) —
+      `tests/services/http/api-client.test.ts` (feliz + 404 + abort). Variáveis de teste em
+      `.env.test` commitado (chave fake), carregado pelo Vitest.
 
 ## 6. `src/services/repositories/` — fetchers das consultas (ADR-10)
 
 **`city-repository.ts`:**
-- [ ] `searchCities` lança (`city-repository.ts:12-14`) — implementar:
-  - [ ] `GET /geo/1.0/direct` com `buildCitySearchQuery(term)` (respeitando sinal de abort);
-  - [ ] `mapCityDtoToModel` na lista → `City[]`;
-  - [ ] resposta vazia/404 → `[]` (estado `empty` é traduzido no hook — arquitetura §5.3);
-  - [ ] propagar `AppError` (nunca `AxiosError` cru).
+- [x] `searchCities` lança (`city-repository.ts:12-14`) — implementar:
+  - [x] `GET /geo/1.0/direct` com `buildCitySearchQuery(term)` (respeitando sinal de abort);
+  - [x] `mapCityDtoToModel` na lista → `City[]`;
+  - [x] resposta vazia/404 → `[]` (estado `empty` é traduzido no hook — arquitetura §5.3);
+  - [x] propagar `AppError` (nunca `AxiosError` cru).
 
 **`weather-repository.ts`:**
-- [ ] `getWeather` lança (`weather-repository.ts:20-25`) — implementar conforme escopo:
-  - [ ] `current` → `GET /data/2.5/weather` → `mapCurrentWeatherDtoToModel`;
-  - [ ] `current+forecast` → adiciona `GET /data/2.5/forecast` → `mapForecastBlockDtoToHourlyModel`;
-  - [ ] ⚑ anexo-11 (item 1): o repositório retorna `WeatherResult { current, hourly }` sem
+- [x] `getWeather` lança (`weather-repository.ts:20-25`) — implementar conforme escopo:
+  - [x] `current` → `GET /data/2.5/weather` → `mapCurrentWeatherDtoToModel`;
+  - [x] `current+forecast` → adiciona `GET /data/2.5/forecast` → `mapForecastBlockDtoToHourlyModel`;
+  - [x] ⚑ anexo-11 (item 1): o repositório retorna `WeatherResult { current, hourly }` sem
         `daily` (derivado em `utils/selectors`) — manter assim e documentar;
-  - [ ] propagar `AppError`.
-- [ ] Respeitar `AbortSignal` (concorrência/descarte — ADR-06, stack §9).
-- [ ] Criar testes em `tests/services/repositories/*.test.ts` via **MSW** (fase 04).
+  - [x] propagar `AppError`.
+- [x] Respeitar `AbortSignal` (concorrência/descarte — ADR-06, stack §9).
+- [x] Criar testes em `tests/services/repositories/*.test.ts` via **MSW** (fase 04).
 
 ---
 
 ## Critério de conclusão da fase 02
 
-- [ ] `npm run typecheck` e `npm run lint` passam.
-- [ ] Testes de `services/*` criados e passando (`npm run test`).
-- [ ] Nenhum `Not implemented` restante em `src/services/`.
+- [x] `npm run typecheck` e `npm run lint` passam.
+- [x] Testes de `services/*` criados e passando (`npm run test`).
+- [x] Nenhum `Not implemented` restante em `src/services/`.
 - [ ] Fluxo manual opcional: com `.env` preenchido e apenas MSW desativado, uma chamada a
       `searchCities('São Paulo')` retorna `City[]`. (Parâmetro: execução sem `npm run dev`.)

@@ -36,9 +36,13 @@
 - **Onde:** `src/services/http/api-client.ts:19-23`.
 - **Comportamento atual:** sem `VITE_WEATHER_API_KEY`, o próprio import do módulo quebra a
   aplicação ("fail early", coerente com stack §18).
-- **Avaliação:** na **fase 02**, confirmar se o fail-early é mantido (recomendado) ou se a
-  ausência de chave vira `UnauthorizedError` tratado na UI. Se mantido, garantir mensagem
-  clara no `.env.example`/README.
+- **Resolução (fase 02, §5):** **fail-early mantido** (recomendação do anexo). Sem chave, o
+  build/dev quebra no load do módulo com mensagem clara ("Copie `.env.example` para `.env`");
+  docker da chave nunca chega como `UnauthorizedError` na UI por essa ausência de
+  configuração. `.env.example`/README já descrevem a variável como obrigatória.
+  Para os testes de integração (MSW), o fail-early é satisfeito por um `.env.test` commitado
+  com chave **fake** (`VITE_WEATHER_API_KEY=tests-only-key`) e baseURL de teste
+  (`http://localhost:3003`) — Vitest carrega `.env.test` no modo `test`.
 - **Checkbox afetado:** `02-camada-servicos.md` §5.
 
 ## Item 4 — Contrato DTO pode estar incompleto vs resposta real da OpenWeather

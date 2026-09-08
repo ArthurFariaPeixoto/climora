@@ -34,8 +34,17 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
   testes em `tests/services/adapters/`); §4 concluído: `classifyHttpError` implementado
   (duck-typing `isAxiosError`, passthrough p/ não-axios, `null` p/ `ERR_CANCELED`,
   rede/timeout/401/404/429/5xx → taxonomia, fallback `ServerError`, testes em
-  `tests/services/http/`); §5 (api-client) e §6 (repositories) pendentes — código dessas
-  camadas ainda lança `Not implemented`/tem TODO.
+  `tests/services/http/`); §5 concluído: `api-client.ts` com interceptor de **resposta** como
+  ponto único de classificação (erros propagados sempre `AppError`; abort `ERR_CANCELED`
+  repassado como erro original — concorrência ADR-06), `appid` no request, fail-early da
+  chave mantido (anexo-11 item 3) e `.env.test` commitado (chave fake) para os testes de
+  integração MSW (`tests/services/http/api-client.test.ts`: feliz+endpoints+adapter, 404,
+  abort); §6 concluído: `repositories/` implementados (`searchCities` com `GET /geo/1.0/direct`
+  → `City[]`, `[]` p/ vazio/404; `getWeather` com escopo `current`/`current+forecast` →
+  `WeatherResult { current, hourly }` sem `daily`, blocos 3h → `HourlyForecast[]`; ambos
+  respeitam `AbortSignal` — ADR-06, e propagam `AppError`; testes MSW em
+  `tests/services/repositories/*.test.ts`). Fase 02 concluída (§1–§6) — sem `Not implemented`
+  restante em `src/services/`.
 
 ## Comandos
 
@@ -43,4 +52,7 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
 - `npm run typecheck` · `npm run lint` · `npm run format`
 - `npm run test` (uma vez) · `npm run test:watch`
 - Ambiente: Node 20.19+/22.12+, npm; `.npmrc` tem `legacy-peer-deps=true` (bug do arborist — não remover).
-- `.env` local a partir de `.env.example`; nunca commitar. Testes usam MSW com `onUnhandledRequest: 'error'` (toda chamada precisa de handler) e `ResizeObserver` mockado em `tests/setup.ts`.
+- `.env` local a partir de `.env.example`; nunca commitar. `.env.test` (chave fake +
+  baseURL `http://localhost:3003`) é commitado e carregado pelo Vitest para os testes de
+  integração MSW. Testes usam MSW com `onUnhandledRequest: 'error'` (toda chamada precisa de
+  handler) e `ResizeObserver` mockado em `tests/setup.ts`.

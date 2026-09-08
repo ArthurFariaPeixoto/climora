@@ -69,6 +69,10 @@ npm run test        # executa uma vez
 npm run test:watch  # modo watch
 ```
 
+Os testes de integração de `services/http` e `services/repositories` simulam a rede com MSW e
+usam valores fake de `VITE_WEATHER_API_KEY`/`VITE_WEATHER_API_BASE_URL` do `.env.test`
+(commitado, carregado pelo Vitest no modo `test`). Nenhum teste chama a API real.
+
 ## Lint / formatação
 
 ```bash
