@@ -1,8 +1,10 @@
-import { mapCurrentWeatherDtoToModel, mapForecastBlockDtoToHourlyModel } from '@/services/adapters/weather.adapter';
+import {
+  mapCurrentWeatherDtoToModel,
+  mapForecastBlockDtoToHourlyModel,
+} from '@/services/adapters/weather.adapter';
 import type { CurrentWeatherDto, ForecastDto } from '@/services/dtos';
 import { buildWeatherQuery } from '@/services/endpoints/endpoints';
 import { apiClient } from '@/services/http/api-client';
-import type { City } from '@/models/City';
 import type { CurrentWeather } from '@/models/CurrentWeather';
 import type { HourlyForecast } from '@/models/HourlyForecast';
 import type { WeatherRequest } from '@/models/WeatherRequest';
@@ -15,8 +17,9 @@ export interface WeatherResult {
 /**
  * Repositório de clima — fetcher da camada de data-fetching (ADR-10).
  *
- * Orquestra client + endpoint + adapter e retorna apenas `models`. O escopo de
- * dados (`WeatherRequest.scope`) decide os endpoints chamados:
+ * Orquestra client + endpoint + adapter e retorna apenas `models`. Recebe o
+ * `WeatherRequest` da camada de aplicação (`lat`/`lon`/`scope`); o escopo
+ * decide os endpoints chamados:
  * - `current` → só `/data/2.5/weather` (`hourly` fica vazio);
  * - `current+forecast` → além do clima atual, `/data/2.5/forecast` (blocos de
  *   3h → `HourlyForecast[]`).
@@ -28,11 +31,10 @@ export interface WeatherResult {
  * chegam `AppError` via interceptor do `apiClient` — nada de `AxiosError` cru.
  */
 export async function getWeather(
-  city: City,
-  scope: WeatherRequest['scope'],
+  request: WeatherRequest,
   signal?: AbortSignal,
 ): Promise<WeatherResult> {
-  const { paths, params } = buildWeatherQuery(city, scope);
+  const { paths, params } = buildWeatherQuery(request);
   const shared = { params, signal };
 
   if (paths.length === 1) {
@@ -46,7 +48,9 @@ export async function getWeather(
   ]);
 
   const current = mapCurrentWeatherDtoToModel(currentResponse.data);
-  const hourly = forecastResponse.data.list.map(mapForecastBlockDtoToHourlyModel);
+  const hourly = forecastResponse.data.list.map(
+    mapForecastBlockDtoToHourlyModel,
+  );
 
   return { current, hourly };
 }

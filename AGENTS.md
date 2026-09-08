@@ -40,11 +40,35 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
   chave mantido (anexo-11 item 3) e `.env.test` commitado (chave fake) para os testes de
   integração MSW (`tests/services/http/api-client.test.ts`: feliz+endpoints+adapter, 404,
   abort); §6 concluído: `repositories/` implementados (`searchCities` com `GET /geo/1.0/direct`
-  → `City[]`, `[]` p/ vazio/404; `getWeather` com escopo `current`/`current+forecast` →
-  `WeatherResult { current, hourly }` sem `daily`, blocos 3h → `HourlyForecast[]`; ambos
-  respeitam `AbortSignal` — ADR-06, e propagam `AppError`; testes MSW em
-  `tests/services/repositories/*.test.ts`). Fase 02 concluída (§1–§6) — sem `Not implemented`
-  restante em `src/services/`.
+  → `City[]`, `[]` p/ vazio/404; `getWeather(request: WeatherRequest)` com escopo
+  `current`/`current+forecast` → `WeatherResult { current, hourly }` sem `daily`, blocos 3h →
+  `HourlyForecast[]`; ambos respeitam `AbortSignal` — ADR-06, e propagam `AppError`; testes
+  MSW em `tests/services/repositories/*.test.ts`). Fase 02 concluída (§1–§6) — sem
+  `Not implemented` restante em `src/services/`. Fase 03 em andamento — §1 concluído:
+  `city-query.ts` conecta `searchCities` no `queryFn` (com `signal` do TanStack — ADR-06),
+  usa `options.term` na chave e no fetcher, `enabled` controlado pela fachada, `staleTime`
+  ~60s, `placeholderData: keepPreviousData` e `retry` por consulta que só reexecuta erros
+  transitórios (`network`/`timeout`/`server`, máx. 2) — 4xx/`invalid-data`/abort sem retry
+  (decisão registrada no anexo-11 item 5; default global `retry: 1` mantido em `main.tsx`).
+  §2 concluído: `weather-query.ts` conecta `getWeather(options.city, signal)`, `WeatherBundle`
+  sem `daily` (derivação no `use-weather` — anexo-11 item 1), `staleTime` ~5min,
+  `keepPreviousData` e mesmo `retry` de §1; `isRetryableAppError` extraído para `utils/errors`
+  (função pura compartilhada pelas queries); `getWeather`/**`buildWeatherQuery`** refatorados
+  para receber `WeatherRequest` (o modelo `City` não é mais necessário p/ clima — testes de
+  `services/repositories` e `services/endpoints` atualizados).
+  §3 concluído: fachada `use-city-search.ts` (`useCitySearch(term)`) só dispara
+  `useCitySearchQuery` com termo válido (termo inválido → `InvalidSearchError`, sem
+  requisição), traduz estados da query → `idle/loading/success/empty/error` com `City[]` +
+  `error: AppError | null` + `isFetching`/`refetch` (preserva `models`; ADR-06 p/ troca de
+  termo) — testes em `tests/hooks/use-city-search.test.tsx` (repositório mockado +
+  QueryClient com `retry: false`; caso de `loading` com promise controlada em `act`; erro
+  com `AppError` não-transitório p/ evitar retry nos testes). Fase 03 concluída — §4:
+  fachada `use-weather.ts` recebe `WeatherRequest | null` (`null` → `idle`, chave inerte
+  quando desabilitada — rules-of-hooks), traduz → `idle/loading/success/error` (`empty`
+  defensivo, anexo-11 item 14), deriva `daily` via `groupHourlyByDay` (único ponto de
+  derivação — anexo-11 item 1), expõe `current`/`hourly`/`daily` + `error`/`isFetching`/
+  `refetch`; testes em `tests/hooks/use-weather.test.tsx` (mesmo arranjo da busca; troca de
+  cidade exercita chave nova/ADR-06). Sem `Not implemented` em `src/hooks/`.
 
 ## Comandos
 

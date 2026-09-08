@@ -1,4 +1,3 @@
-import type { City } from '@/models/City';
 import type { WeatherRequest } from '@/models/WeatherRequest';
 
 /**
@@ -54,20 +53,21 @@ export interface WeatherEndpoints {
 
 /**
  * Constrói os paths e parâmetros de uma consulta de clima conforme o escopo.
+ *
+ * Usa o `WeatherRequest` da camada de aplicação como entrada: `lat`/`lon` o
+ * localizam e `scope` decide os endpoints — o modelo `City` pertence à busca
+ * de cidades e não é necessário aqui (a previsão só precisa de coordenadas).
  */
-export function buildWeatherQuery(
-  city: City,
-  scope: WeatherRequest['scope'],
-): WeatherEndpoints {
+export function buildWeatherQuery(request: WeatherRequest): WeatherEndpoints {
   const params: WeatherQuery = {
-    lat: city.lat,
-    lon: city.lon,
+    lat: request.lat,
+    lon: request.lon,
     units: 'metric',
     lang: DEFAULT_LANG,
   };
 
   const paths =
-    scope === 'current'
+    request.scope === 'current'
       ? [CURRENT_WEATHER_PATH]
       : [CURRENT_WEATHER_PATH, FORECAST_PATH];
 

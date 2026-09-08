@@ -80,3 +80,19 @@ export function getErrorMessage(error: AppError): string {
       return 'Dados incompletos. Tente novamente mais tarde.';
   }
 }
+
+/**
+ * Decide se um erro merece nova tentativa na caça de dados (ADR-07).
+ *
+ * Função pura usada no `retry` das consultas (`hooks/data/*`): apenas falhas
+ * transitórias (`network`/`timeout`/`server`) são reexecutadas. 4xx (401/429),
+ * `not-found` e `invalid-data` não melhoram com retry; o abort (`ERR_CANCELED`)
+ * é tratado como concorrência pela query e não chega até aqui.
+ */
+export function isRetryableAppError(error: AppError): boolean {
+  return (
+    error.kind === 'network' ||
+    error.kind === 'timeout' ||
+    error.kind === 'server'
+  );
+}

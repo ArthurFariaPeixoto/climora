@@ -28,35 +28,45 @@ describe('buildCitySearchQuery', () => {
 });
 
 describe('buildWeatherQuery', () => {
-  const city = { name: 'São Paulo', country: 'BR', lat: -23.55, lon: -46.63 };
+  const request = {
+    lat: -23.55,
+    lon: -46.63,
+    scope: 'current' as const,
+  };
 
   it('scope current → só o path de clima atual, com parâmetros exatos', () => {
-    const { paths, params } = buildWeatherQuery(city, 'current');
+    const { paths, params } = buildWeatherQuery(request);
 
     expect(paths).toEqual([CURRENT_WEATHER_PATH]);
     expect(params).toEqual({
-      lat: city.lat,
-      lon: city.lon,
+      lat: request.lat,
+      lon: request.lon,
       units: 'metric',
       lang: DEFAULT_LANG,
     });
   });
 
   it('scope current+forecast → clima atual e previsão, com parâmetros exatos', () => {
-    const { paths, params } = buildWeatherQuery(city, 'current+forecast');
+    const { paths, params } = buildWeatherQuery({
+      ...request,
+      scope: 'current+forecast',
+    });
 
     expect(paths).toEqual([CURRENT_WEATHER_PATH, FORECAST_PATH]);
     expect(params).toEqual({
-      lat: city.lat,
-      lon: city.lon,
+      lat: request.lat,
+      lon: request.lon,
       units: 'metric',
       lang: DEFAULT_LANG,
     });
   });
 
   it('parâmetros idênticos entre os escopos', () => {
-    const current = buildWeatherQuery(city, 'current').params;
-    const forecast = buildWeatherQuery(city, 'current+forecast').params;
+    const current = buildWeatherQuery(request).params;
+    const forecast = buildWeatherQuery({
+      ...request,
+      scope: 'current+forecast',
+    }).params;
 
     expect(forecast).toEqual(current);
   });

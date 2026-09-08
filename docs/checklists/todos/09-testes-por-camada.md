@@ -45,9 +45,9 @@
 
 ## 6. Hooks de feature — tradução de estados (camada de data-fetching simulada)
 
-- [ ] `tests/hooks/use-city-search.test.ts` — `idle/loading/success/empty/error`;
+- [x] `tests/hooks/use-city-search.test.tsx` — `idle/loading/success/empty/error`;
       termo inválido → `InvalidSearchError` sem requisição.
-- [ ] `tests/hooks/use-weather.test.ts` — estados traduzidos, `daily` derivado,
+- [x] `tests/hooks/use-weather.test.tsx` — estados traduzidos, `daily` derivado,
       `refetch`, troca de cidade (concorrência).
 
 ## 7. `components/ui` e `components/state` — props diretas (sem mock)

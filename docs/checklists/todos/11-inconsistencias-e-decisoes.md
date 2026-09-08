@@ -14,10 +14,10 @@
 - **Conflito:** a arquitetura/stack determinam que `DailyForecast` é **derivado** por
   `utils/selectors.groupHourlyByDay` dos blocos de 3h (stack §10), não buscado da API.
   Portanto `daily` não deveria vir do repositório/query.
-- **Resolução:** na **fase 03**, escolher o ponto único de derivação:
-  - (a) remover `daily` de `WeatherBundle` e derivá-lo no hook `use-weather`; ou
-  - (b) derivar no `queryFn` e manter `daily` no bundle.
-  Norma sugerida: (a) — mantém a query enxuta e os selectors como fonte de derivação (§5.6).
+- **Resolução (fase 03, §2):** adotada a opção **(a)** — `WeatherBundle` ficou sem `daily`
+  (`{ current, hourly }`); a derivação via `groupHourlyByDay` acontece **apenas** no hook
+  `use-weather` (fase 03, §4), que é o único ponto de derivação (arquitetura §5.6). O
+  repositório e a query permanecem enxutos, entregando exatamente o que a API provê.
 - **Checkbox afetado:** `03-camada-hooks.md` §2 e §4.
 
 ## Item 2 — `validateSearchTerm` retorna `string | null` em vez de usar a taxonomia
@@ -72,6 +72,11 @@
 - **Avaliação:** na **fase 03/07**, alinhar: manter default `staleTime: 0` (seguro) e
   `retry` por consulta, ou subir default com exceções. Evitar `refetchOnWindowFocus`
   surpreendente em avaliação/banca.
+- **Resolução parcial (fase 03, §1 — `city-query`):** mantido o default global
+  `staleTime: 0`/`retry: 1` do `main.tsx`; a consulta de cidades passa a definir `staleTime`
+  de ~60s e um `retry` **por consulta** que só reexecuta erros transitórios
+  (`network`/`timeout`/`server`, até 2 tentativas) — 4xx (401/429), `invalid-data` e abort
+  não são repetidos. Pendente avaliar o default global na fase 07 (§4).
 - **Checkbox afetado:** `03-camada-hooks.md` §1/§2 e `07-composicao-dashboard.md` §4.
 
 ## Item 6 — Smoke test de `App.test.tsx` valida o placeholder
