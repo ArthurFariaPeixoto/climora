@@ -68,7 +68,32 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
   defensivo, anexo-11 item 14), deriva `daily` via `groupHourlyByDay` (único ponto de
   derivação — anexo-11 item 1), expõe `current`/`hourly`/`daily` + `error`/`isFetching`/
   `refetch`; testes em `tests/hooks/use-weather.test.tsx` (mesmo arranjo da busca; troca de
-  cidade exercita chave nova/ADR-06). Sem `Not implemented` em `src/hooks/`.
+  cidade exercita chave nova/ADR-06). Sem `Not implemented` em `src/hooks/`. Fase 04 concluída —
+  §1 concluído: `src/mocks/fixtures/` criado (`dto.ts`: DTOs válidos — cidades
+  com/sem `state`/`local_names`, clima atual + variante chuva, previsão com builder de 40
+  blocos/5 dias e payloads corrompidos p/ adapters; `models.ts`: modelos prontos — `City[]`,
+  current/hourly/daily; `scenarios.ts`: termos de busca, `WeatherRequest` e corpos de erro
+  404/429/500; barrel `index.ts`). Testes das fases 02–03 migrados de fixtures inline para
+  `@/mocks/fixtures` (adapters, repositories, api-client, hooks). §2 concluído:
+  `src/mocks/handlers/index.ts` com handlers padrão (`geocodingHandler` por `q`,
+  `currentWeatherHandler`, `forecastHandler` — URLs absolutas via `VITE_WEATHER_API_BASE_URL`,
+  pois o adapter Node do MSW não casa paths relativos) + handlers de erro parametrizáveis
+  por cenário (404/429/500 e network via `HttpResponse.error()` — `server.use` por teste;
+  timeout avaliado e **não** simulado em rede, coberto por unit em `errors.test.ts`).
+  `city-repository.test.ts` passa a exercitar os handlers padrão no fluxo feliz/`empty` e
+  ganhou cenários de 429/500/network; `weather-repository.test.ts` usa `weatherNotFoundHandler`
+  e ganhou 429; happy paths do clima mantêm handlers inline (default da previsão = 40 blocos).
+  §3 concluído: camada de data-fetching de teste em `src/mocks/testing/` (arquitetura
+  §5.7/§11.2) — `createTestQueryClient()` (`QueryClient` por teste com `retry: false` +
+  `gcTime: 0`, overrides p/ queries da fase 09), `createQueryClientWrapper(client)` p/
+  `renderHook({ wrapper })` e `deferred<T>()` p/ induzir `loading` (transição
+  `loading → success/error` via `act`). Testes `use-city-search`/`use-weather` refatorados
+  p/ usar os helpers (repositórios seguem mockados por arquivo — `vi.mock` hoisted);
+  `success`/`empty`/`error` via `mockResolvedValueOnce`/`mockRejectedValueOnce` com fixtures.
+  §4 concluído (validação, sem código): `ResizeObserver` mockado (setup.ts), regra
+  `onUnhandledRequest: 'error'` forte garantida e suíte completa (14 arquivos / 180 testes,
+  smoke `App` incluso) verde **sem rede real** — critérios de conclusão da fase 04 atendidos
+  (`typecheck` + `lint` + `test`).
 
 ## Comandos
 

@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
 import type { City } from '@/models/City';
-import type { GeocodingLocationDto } from '@/services/dtos';
+import {
+  beloHorizonteGeoDto,
+  geocodingBlankCountryDto,
+  geocodingMissingNameDto,
+  geocodingNonFiniteLatDto,
+  lisboaGeoDto,
+  rioGeoDto,
+  saoPauloGeoDto,
+} from '@/mocks/fixtures';
 import { mapCityDtoToModel } from '@/services/adapters/city.adapter';
 import type { InvalidDataError } from '@/utils/errors';
 
@@ -17,79 +25,55 @@ function requireInvalidData(fn: () => City): InvalidDataError {
 
 describe('mapCityDtoToModel', () => {
   it('mapeia name, country, lat e lon', () => {
-    const dto: GeocodingLocationDto = {
-      name: 'São Paulo',
-      lat: -23.55,
-      lon: -46.63,
+    expect(mapCityDtoToModel(rioGeoDto)).toEqual<City>({
+      name: 'Rio de Janeiro',
       country: 'BR',
-    };
-
-    expect(mapCityDtoToModel(dto)).toEqual<City>({
-      name: 'São Paulo',
-      country: 'BR',
-      lat: -23.55,
-      lon: -46.63,
+      lat: -22.9,
+      lon: -43.17,
     });
   });
 
   it('propaga state quando presente', () => {
-    const dto: GeocodingLocationDto = {
-      name: 'Belo Horizonte',
-      lat: -19.91,
-      lon: -43.94,
-      country: 'BR',
-      state: 'MG',
-    };
-
-    expect(mapCityDtoToModel(dto).state).toBe('MG');
+    expect(mapCityDtoToModel(beloHorizonteGeoDto).state).toBe('MG');
   });
 
   it('ignora local_names (name já vêm localizado via lang)', () => {
-    const dto: GeocodingLocationDto = {
-      name: 'Rio de Janeiro',
-      local_names: { ar: 'ريو دي جانيرو' },
-      lat: -22.9,
-      lon: -43.17,
+    expect(mapCityDtoToModel(saoPauloGeoDto)).toEqual<City>({
+      name: 'São Paulo',
       country: 'BR',
-    };
+      state: 'SP',
+      lat: -23.55,
+      lon: -46.63,
+    });
+  });
 
-    expect(mapCityDtoToModel(dto)).toEqual({
-      name: 'Rio de Janeiro',
-      country: 'BR',
-      lat: -22.9,
-      lon: -43.17,
+  it('mapeia cidade sem state e sem local_names', () => {
+    expect(mapCityDtoToModel(lisboaGeoDto)).toEqual<City>({
+      name: 'Lisboa',
+      country: 'PT',
+      lat: 38.72,
+      lon: -9.14,
     });
   });
 
   it('lança InvalidDataError para lat não finita', () => {
-    const dto = {
-      name: 'Curitiba',
-      lat: Number.NaN,
-      lon: -49.27,
-      country: 'BR',
-    } as unknown as GeocodingLocationDto;
-
-    expect(requireInvalidData(() => mapCityDtoToModel(dto)).message).toContain('lat');
+    expect(
+      requireInvalidData(() => mapCityDtoToModel(geocodingNonFiniteLatDto))
+        .message,
+    ).toContain('lat');
   });
 
   it('lança InvalidDataError para country vazio', () => {
-    const dto = {
-      name: 'Florianópolis',
-      lat: -27.59,
-      lon: -48.55,
-      country: '   ',
-    } as unknown as GeocodingLocationDto;
-
-    expect(requireInvalidData(() => mapCityDtoToModel(dto)).message).toContain('country');
+    expect(
+      requireInvalidData(() => mapCityDtoToModel(geocodingBlankCountryDto))
+        .message,
+    ).toContain('country');
   });
 
   it('lança InvalidDataError para name ausente', () => {
-    const dto = {
-      lat: -15.79,
-      lon: -47.88,
-      country: 'BR',
-    } as unknown as GeocodingLocationDto;
-
-    expect(requireInvalidData(() => mapCityDtoToModel(dto)).message).toContain('name');
+    expect(
+      requireInvalidData(() => mapCityDtoToModel(geocodingMissingNameDto))
+        .message,
+    ).toContain('name');
   });
 });

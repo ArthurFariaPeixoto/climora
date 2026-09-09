@@ -1,9 +1,17 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useCitySearch } from '@/hooks/use-city-search';
+import {
+  SEARCH_TERM_NO_RESULTS,
+  SEARCH_TERM_WITH_RESULTS,
+  saoPauloCity,
+} from '@/mocks/fixtures';
+import {
+  createQueryClientWrapper,
+  createTestQueryClient,
+  deferred,
+} from '@/mocks/testing';
 import type { City } from '@/models/City';
 import { searchCities } from '@/services/repositories/city-repository';
 
@@ -11,9 +19,10 @@ import { searchCities } from '@/services/repositories/city-repository';
  * Fachada `use-city-search` (fase 03 §3, ADR-05/06/09/11).
  *
  * Tradução dos estados para a taxonomia canônica com a camada de data-fetching
- * real e o repositório mockado (stack §16): `idle` e termo inválido nunca
- * disparam requisição; quando válido, o gating `enabled`/chave da query de §1
- * é exercitado de verdade.
+ * real e o repositório mockado (stack §16, fase 04 §3): `idle` e termo inválido
+ * nunca disparam requisição; quando válido, o gating `enabled`/chave da query
+ * de §1 é exercitado de verdade. Dados de `src/mocks/fixtures` (fase 04 §1) e
+ * `QueryClient` isolado de `src/mocks/testing`.
  */
 vi.mock('@/services/repositories/city-repository', () => ({
   searchCities: vi.fn(),
@@ -21,28 +30,12 @@ vi.mock('@/services/repositories/city-repository', () => ({
 
 const mockedSearchCities = vi.mocked(searchCities);
 
-const saoPaulo: City = {
-  name: 'São Paulo',
-  country: 'BR',
-  state: 'SP',
-  lat: -23.55,
-  lon: -46.63,
-};
-
-let queryClient: QueryClient;
+let wrapper: ReturnType<typeof createQueryClientWrapper>;
 
 beforeEach(() => {
-  queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
+  wrapper = createQueryClientWrapper(createTestQueryClient());
   mockedSearchCities.mockReset();
 });
-
-function wrapper({ children }: { children: ReactNode }) {
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
-}
 
 describe('useCitySearch', () => {
   it('termo vazio: idle, sem requisição', () => {
@@ -64,41 +57,42 @@ describe('useCitySearch', () => {
   });
 
   it('loading enquanto pendente e success ao resolver', async () => {
-    let resolve!: (value: City[]) => void;
-    mockedSearchCities.mockImplementationOnce(
-      () =>
-        new Promise<City[]>((res) => {
-          resolve = res;
-        }),
-    );
+    const { promise, resolve } = deferred<City[]>();
+    mockedSearchCities.mockImplementationOnce(() => promise);
 
-    const { result } = renderHook(() => useCitySearch('são paulo'), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useCitySearch(SEARCH_TERM_WITH_RESULTS),
+      {
+        wrapper,
+      },
+    );
 
     expect(result.current.status).toBe('loading');
 
     await act(async () => {
-      resolve([saoPaulo]);
+      resolve([saoPauloCity]);
     });
 
     await waitFor(() => expect(result.current.status).toBe('success'));
-    expect(result.current.cities).toEqual([saoPaulo]);
+    expect(result.current.cities).toEqual([saoPauloCity]);
     expect(mockedSearchCities).toHaveBeenCalledWith(
-      'são paulo',
+      SEARCH_TERM_WITH_RESULTS,
       expect.anything(),
     );
   });
 
   it('success: expõe City[] do repositório', async () => {
-    mockedSearchCities.mockResolvedValueOnce([saoPaulo]);
+    mockedSearchCities.mockResolvedValueOnce([saoPauloCity]);
 
-    const { result } = renderHook(() => useCitySearch('são paulo'), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useCitySearch(SEARCH_TERM_WITH_RESULTS),
+      {
+        wrapper,
+      },
+    );
 
     await waitFor(() => expect(result.current.status).toBe('success'));
-    expect(result.current.cities).toEqual([saoPaulo]);
+    expect(result.current.cities).toEqual([saoPauloCity]);
     expect(result.current.error).toBeNull();
     expect(result.current.isFetching).toBe(false);
     expect(typeof result.current.refetch).toBe('function');
@@ -107,7 +101,7 @@ describe('useCitySearch', () => {
   it('empty: success sem resultados', async () => {
     mockedSearchCities.mockResolvedValueOnce([]);
 
-    const { result } = renderHook(() => useCitySearch('cidade inexistente'), {
+    const { result } = renderHook(() => useCitySearch(SEARCH_TERM_NO_RESULTS), {
       wrapper,
     });
 
@@ -122,9 +116,12 @@ describe('useCitySearch', () => {
       message: 'Configuração inválida: verifique a chave de API.',
     });
 
-    const { result } = renderHook(() => useCitySearch('são paulo'), {
-      wrapper,
-    });
+    const { result } = renderHook(
+      () => useCitySearch(SEARCH_TERM_WITH_RESULTS),
+      {
+        wrapper,
+      },
+    );
 
     await waitFor(() => expect(result.current.status).toBe('error'));
     expect(result.current.error?.kind).toBe('unauthorized');
@@ -133,19 +130,19 @@ describe('useCitySearch', () => {
 
   it('troca de termo: chave nova dispara nova consulta e troca os dados', async () => {
     mockedSearchCities.mockImplementation((term: string) =>
-      Promise.resolve([{ ...saoPaulo, name: term }]),
+      Promise.resolve([{ ...saoPauloCity, name: term }]),
     );
 
     const { result, rerender } = renderHook(
       (term: string) => useCitySearch(term),
       {
         wrapper,
-        initialProps: 'são paulo',
+        initialProps: SEARCH_TERM_WITH_RESULTS,
       },
     );
 
     await waitFor(() => expect(result.current.status).toBe('success'));
-    expect(result.current.cities[0].name).toBe('são paulo');
+    expect(result.current.cities[0].name).toBe(SEARCH_TERM_WITH_RESULTS);
 
     rerender('recife');
 
