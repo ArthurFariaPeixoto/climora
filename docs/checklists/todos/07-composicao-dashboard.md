@@ -20,8 +20,12 @@
         skeleton), `error` (`ErrorState` com retry), `empty` (`EmptyState`);
   - [ ] widgets `weather/*`: `CurrentWeatherCard`, `MetricsGrid`, `HourlyForecast`,
         `DailyForecast`;
-  - [ ] `WeatherCharts` **lazy** com `React.lazy` + `<Suspense fallback>` (fase 06).
-- [ ] Aplicar `Suspense` no nível certo (apenas gráfico em fallback, resto carrega normal).
+  - [ ] `WeatherCharts` **lazy** com `React.lazy` + `<Suspense fallback>` (fase 06):
+        importar o **default export** via
+        `React.lazy(() => import('@/components/weather/WeatherCharts'))`;
+  - [ ] Aplicar `Suspense` no nível certo (apenas gráfico em fallback, resto carrega
+        normal) — o chunk separado do gráfico é verificado no item de `npm run build`
+        (seção 2, "build gera `dist/` sem erros").
 - [ ] ⚑ anexo-11 (item 9): definir a divisão de estado entre `SearchBar`/`SearchResults`
       (termo local) e `WeatherDashboard` (seleção) — sem prop-drilling excessivo e sem
       globalizar (ADR-11/ADR-04).

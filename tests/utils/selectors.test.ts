@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import type { HourlyForecast } from '@/models/HourlyForecast';
-import { groupHourlyByDay } from '@/utils/selectors';
+import {
+  groupHourlyByDay,
+  toHourlyChartData,
+} from '@/utils/selectors';
+import { formatHour } from '@/utils/format';
 
 const DAY_1_START = 1788739200; // 7 de setembro de 2026, 00:00 UTC
 const DAY_2_START = 1788825600; // 8 de setembro de 2026, 00:00 UTC
@@ -149,6 +153,33 @@ describe('groupHourlyByDay', () => {
     expect(result[0].maxC).toBe(lastBlockOfDay1.temperatureC);
     expect(result[1].date).toBe(DAY_2_START);
     expect(result[1].maxC).toBe(firstBlockOfDay2.temperatureC);
+  });
+});
+
+describe('toHourlyChartData', () => {
+  it('pré-formata rótulo e preserva temperatureC/precipitationPct por bloco', () => {
+    const result = toHourlyChartData(DAY_1_BLOCKS);
+
+    expect(result).toHaveLength(DAY_1_BLOCKS.length);
+    for (let i = 0; i < DAY_1_BLOCKS.length; i++) {
+      const blockHour = DAY_1_BLOCKS[i];
+      expect(result[i]).toEqual({
+        time: blockHour.time,
+        label: formatHour(blockHour.time),
+        temperatureC: blockHour.temperatureC,
+        precipitationPct: blockHour.precipitationPct,
+      });
+    }
+  });
+
+  it('usa formatHour (UTC) nos rótulos', () => {
+    const noon = toHourlyChartData([block(DAY_1_START + 12 * 3600)]);
+
+    expect(noon[0].label).toBe('12h');
+  });
+
+  it('retorna [] para entrada vazia', () => {
+    expect(toHourlyChartData([])).toEqual([]);
   });
 });
 

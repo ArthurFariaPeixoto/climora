@@ -8,6 +8,7 @@
 import type { DailyForecast } from '@/models/DailyForecast';
 import type { HourlyForecast } from '@/models/HourlyForecast';
 import { dayjsFromUnixSeconds } from '@/utils/format/dayjs';
+import { formatHour } from '@/utils/format';
 
 const SECONDS_PER_HOUR = 3600;
 const NOON_HOUR = 12;
@@ -69,4 +70,31 @@ function conditionClosestToNoon(
     const blockDistance = Math.abs(block.time - noon);
     return blockDistance < closestDistance ? block : closest;
   }).condition;
+}
+
+/** Ponto de série para o gráfico (`WeatherCharts`) — derivado e pré-formatado. */
+export interface HourlyChartPoint {
+  /** Timestamp unix (UTC) do bloco — usado como chave. */
+  time: number;
+  /** Rótulo de hora pré-formatado via `formatHour` (ex.: "14h"). */
+  label: string;
+  temperatureC: number;
+  precipitationPct: number;
+}
+
+/**
+ * Deriva os pontos de série do gráfico horário (arquitetura §5.6 — derivação em
+ * `utils`, nunca dados brutos montados no componente de UI).
+ *
+ * Rótulo em UTC via `formatHour`; entrada vazia → `[]`. Ordem preservada.
+ */
+export function toHourlyChartData(
+  hourly: HourlyForecast[],
+): HourlyChartPoint[] {
+  return hourly.map((block) => ({
+    time: block.time,
+    label: formatHour(block.time),
+    temperatureC: block.temperatureC,
+    precipitationPct: block.precipitationPct,
+  }));
 }

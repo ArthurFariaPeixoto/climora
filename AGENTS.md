@@ -107,6 +107,56 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
   `SearchResults.test.tsx` (4 estados + interação) e `SearchResultItem.test.tsx`
   (`use-city-search` mockada). Infra de teste: `cleanup` explícito adicionado em
   `tests/setup.ts` (Vitest com `globals: false` não registra o auto-cleanup do RTL).
+  Fase 06 em andamento — §1 concluído: `CurrentWeatherCard` implementado (props
+  `{ current, cityName? }`, `Card` fluido `h-full` — ADR-08 — com temperatura grande via
+  `formatTemperature`, sensação térmica, condição `description` + ícone e "Observado em
+  {formatObservedAt}"). Mapeamento `condição → ícone` materializado no anexo-11 item 11:
+  `components/weather/condition-icon.ts` (`getConditionIcon` por `id` 2xx–7xx/800–804,
+  fallback `main`) + `ConditionIcon.tsx` (render via `createElement` p/ satisfazer
+  `react-hooks/static-components`; `aria-hidden`). Testes em
+  `tests/components/weather/CurrentWeatherCard.test.tsx` (props puras com fixtures —
+  temperatura/observação checados contra os formatadores puros, ícone via `.lucide-*`).
+  §2 concluído: `MetricsGrid` implementado (prop `{ current }`, `Card` + grade **fluida**
+  `grid-cols-[repeat(auto-fit,minmax(9rem,1fr))]` — anexo-11 item 15, decisão ADR-08 em
+  vez do `sm:grid-cols-*` literal — com 7 `MetricTile`: umidade, vento (velocidade +
+  direção "18 km/h · S"), mín/máx, pressão, precipitação **condicional** (ausente quando
+  `precipitationPct` indefinido — anexo-11 item 4) e visibilidade; ícones lucide estáticos
+  por prop). Adicionados `formatPrecipitation` e `formatVisibility` em `utils/format`
+  (funções puras — anexo-11 item 16) + fixture `currentWeatherWithPrecipModel`. Testes:
+  `tests/components/weather/MetricsGrid.test.tsx` (valores via formatadores puros, tile
+  condicional presente/ausente, ícones `.lucide-*`) e `tests/utils/format.test.ts`
+  (clamp/arredondamento).
+  §3 concluído: `HourlyForecast` implementado (prop `{ hourly }`, `Card` + heading
+  "Previsão por hora" + lista horizontal com scroll `ul`/`li` — ADR-08; blocos com hora
+  via `formatHour`, `ConditionIcon`, temperatura e precipitação; vazio → `EmptyState`
+  "Previsão horária indisponível.", arquitetura §9.2). `getConditionIcon` estendido p/
+  aceitar `string` (`getConditionIconFromText`): o adapter entrega a **descrição** da API
+  nas previsões, então o matching por keywords cobre descrições pt-BR ("Chuva leve",
+  "Nevoeiro", "Tempestade"…) e categorias em inglês/fixture ('Sun', 'Rain', 'Fog',
+  'Clear') — anexo-11 item 11. Testes em `tests/components/weather/HourlyForecast.test.tsx`
+  (blocos + ícones por categoria e por descrição real + caso vazio).
+  §4 concluído: `DailyForecast` implementado (prop `{ daily }`, `Card` + heading
+  "Previsão diária" + lista horizontal com scroll `ul`/`li` — ADR-08; cada dia com
+  `formatWeekday`, `ConditionIcon`, mín/máx (`formatTemperature`) e precipitação; vazio →
+  `EmptyState` "Previsão diária indisponível."). §6 concluído: mapeamento `condition →
+  ícone` (`condition-icon.ts` + `ConditionIcon.tsx`, anexo-11 item 11) aplicado nos três
+  widgets sem duplicação. Testes em `tests/components/weather/DailyForecast.test.tsx`
+  (dias + range de temperatura + ícones por categoria e por descrição real + caso vazio).
+  §5 concluído: `WeatherCharts` implementado (**default export** p/ `React.lazy` —
+  wrapper/`Suspense`/chunk no build ficam na fase 07, golden rule), props
+  `{ hourly, daily? }` (`daily` reservado; linha diária opcional dispensada — decisão de
+  escopo), `Card` + heading "Temperatura e precipitação por hora" + `ResponsiveContainer`
+  (`ComposedChart`: linha `temperatureC` em eixo °C + barras `precipitationPct` em eixo %;
+  `CartesianGrid`/`Tooltip`; animação desligada p/ testes); acessibilidade via
+  `role="img"` + `aria-label` + heading (Recharts v3 não expõe `accessibilityLayer`);
+  vazio → `EmptyState` "Gráfico indisponível." (arquitetura §9.2). Dados derivados por
+  `toHourlyChartData` em `utils/selectors` (arquitetura §5.6 — sem montar dados brutos no
+  componente). Testes em `tests/components/weather/WeatherCharts.test.tsx` (mock apenas do
+  `ResponsiveContainer` via `importOriginal`, dimensionado 600×300; labels `formatHour`,
+  barras só p/ precipitação > 0, `aria-label`, caso vazio) e `toHourlyChartData` em
+  `tests/utils/selectors.test.ts`. `src/components/weather/` sem `null`/`Not implemented`.
+  Fase 06 concluída (§1–§6) nos itens de componentes/testes; o critério de lazy (chunk
+  separado) e o `npm run build` são validados na fase 07.
 
 ## Comandos
 

@@ -12,81 +12,86 @@
 
 **Hoje retorna `null`.** Implementar:
 
-- [ ] Card (`Card`) com a condição atual: cidade? (nome vindo da composição), temperatura
+- [x] Card (`Card`) com a condição atual: cidade? (nome vindo da composição), temperatura
       grande (`formatTemperature`), sensação térmica, condição (`description`) + ícone
       (mapeamento da fase 01/08).
-- [ ] Observação em `observedAt` formatada (fase 01).
-- [ ] Props/contrato: receber `current: CurrentWeather` (e opcionalmente `cityName`).
-- [ ] Estilo fluido para o grid responsivo (ADR-08).
-- [ ] Testes em `tests/components/weather/CurrentWeatherCard.test.tsx`.
+- [x] Observação em `observedAt` formatada (fase 01).
+- [x] Props/contrato: receber `current: CurrentWeather` (e opcionalmente `cityName`).
+- [x] Estilo fluido para o grid responsivo (ADR-08).
+- [x] Testes em `tests/components/weather/CurrentWeatherCard.test.tsx`.
 
 ## 2. `src/components/weather/MetricsGrid.tsx`
 
 **Hoje retorna `null`.** Implementar:
 
-- [ ] Grade de `MetricTile`s (responsiva — `grid-cols-2`/`sm:grid-cols-3`/…):
-  - [ ] umidade (`formatHumidity`);
-  - [ ] vento: velocidade + direção em texto (fase 01);
-  - [ ] mínima / máxima (`minC`/`maxC`);
-  - [ ] pressão (`pressureHpa`);
-  - [ ] precipitação (`precipitationPct`); visibilidade (`visibilityKm`), se exibida.
-- [ ] Receber `current: CurrentWeather` já integralizada + formatters de `utils/format`.
-- [ ] Ícones lucide por métrica (`icon` do `MetricTile`).
-- [ ] Testes em `tests/components/weather/MetricsGrid.test.tsx`.
+- [x] Grade de `MetricTile`s (fluida `repeat(auto-fit, minmax(...))` — anexo-11 item 15):
+  - [x] umidade (`formatHumidity`);
+  - [x] vento: velocidade + direção em texto (fase 01);
+  - [x] mínima / máxima (`minC`/`maxC`);
+  - [x] pressão (`pressureHpa`);
+  - [x] precipitação (`precipitationPct`); visibilidade (`visibilityKm`), se exibida.
+- [x] Receber `current: CurrentWeather` já integralizada + formatters de `utils/format`.
+- [x] Ícones lucide por métrica (`icon` do `MetricTile`).
+- [x] Testes em `tests/components/weather/MetricsGrid.test.tsx`.
 
 ## 3. `src/components/weather/HourlyForecast.tsx`
 
 **Hoje retorna `null`.** Implementar:
 
-- [ ] Lista horizontal (scroll) ou grid dos blocos de `HourlyForecast`.
-- [ ] Cada bloco: hora (`"14h"` via dayjs — fase 01), temperatura, precipitação e ícone de
+- [x] Lista horizontal (scroll) ou grid dos blocos de `HourlyForecast`.
+- [x] Cada bloco: hora (`"14h"` via dayjs — fase 01), temperatura, precipitação e ícone de
       condição.
-- [ ] Receber `hourly: HourlyForecast[]`; renderizar fallback/`EmptyState` quando vazio
+- [x] Receber `hourly: HourlyForecast[]`; renderizar fallback/`EmptyState` quando vazio
       (ausência de previsão não derruba o dashboard — arquitetura §9.2).
-- [ ] Testes em `tests/components/weather/HourlyForecast.test.tsx` (+ caso vazio).
+- [x] Testes em `tests/components/weather/HourlyForecast.test.tsx` (+ caso vazio).
 
 ## 4. `src/components/weather/DailyForecast.tsx`
 
 **Hoje retorna `null`.** Implementar:
 
-- [ ] Lista dos dias de `DailyForecast` (derivados via `groupHourlyByDay`).
-- [ ] Por dia: rótulo ("seg", "ter"… via dayjs), `minC`/`maxC`, condição/ícone,
+- [x] Lista dos dias de `DailyForecast` (derivados via `groupHourlyByDay`).
+- [x] Por dia: rótulo ("seg", "ter"… via dayjs), `minC`/`maxC`, condição/ícone,
       precipitação.
-- [ ] Receber `daily: DailyForecast[]`; fallback/`EmptyState` quando vazio.
-- [ ] Testes em `tests/components/weather/DailyForecast.test.tsx` (+ caso vazio).
+- [x] Receber `daily: DailyForecast[]`; fallback/`EmptyState` quando vazio.
+- [x] Testes em `tests/components/weather/DailyForecast.test.tsx` (+ caso vazio).
 
 ## 5. `src/components/weather/WeatherCharts.tsx`
 
 **Hoje retorna `null`.** Implementar (stack §14; arquitetura §13):
 
-- [ ] Gráfico(s) com **Recharts** e `ResponsiveContainer`:
-  - [ ] linha de temperatura por hora (00h–24h × °C) a partir de `hourly`;
-  - [ ] (opcional) linha de temperatura por dia a partir de `daily`;
-  - [ ] (opcional) barras de precipitação (%).
-- [ ] Título/labels acessíveis; `aria` nas séries quando possível.
-- [ ] Dados pré-formatados/reduzidos via `utils/selectors` (não montar dados brutos no
-      componente — derivação em `utils`, arquitetura §5.6).
-- [ ] **Lazy loading**:
-  - [ ] exportar componente como default (para `React.lazy`);
-  - [ ] envolver em `React.lazy(() => import(...))` + `<Suspense fallback={...}>` na **fase
-        07** (`WeatherDashboard`);
-  - [ ] verificar que o chunk separado é gerado no build (`dist/` com chunk de gráfico).
-- [ ] Receber props: `hourly`/`daily`.
-- [ ] Testes: render do wrapper com fallback + (se viável) mocks de `ResponsiveContainer`;
-      `ResizeObserver` já mockado no setup.
+- [x] Gráfico(s) com **Recharts** e `ResponsiveContainer`:
+  - [x] linha de temperatura por hora (00h–24h × °C) a partir de `hourly`;
+  - [x] (opcional **dispensado**) linha de temperatura por dia a partir de `daily` —
+        decisão de escopo: não implementado (fixture tem só 2 dias; escopo escolhido =
+        linha+barras); `daily` permanece no contrato de props para a fase 07;
+  - [x] (opcional) barras de precipitação (%) — em eixo direito, junto da linha.
+- [x] Título/labels acessíveis; `aria` nas séries quando possível — heading + `role="img"`/
+      `aria-label` (Recharts v3 não expõe `accessibilityLayer` do v2).
+- [x] Dados pré-formatados/reduzidos via `utils/selectors` (não montar dados brutos no
+      componente — derivação em `utils`, arquitetura §5.6): `toHourlyChartData`.
+- [x] **Lazy loading**:
+  - [x] exportar componente como default (para `React.lazy`).
+
+> Wrapper `React.lazy` + `<Suspense>` e verificação do chunk no build são **pendências da
+> fase 07** — ver `07-composicao-dashboard.md` §1 (linhas 23/24 e 74). Movidos daqui ao
+> concluir a fase 06.
+- [x] Receber props: `hourly`/`daily`.
+- [x] Testes: render do wrapper com fallback + (se viável) mocks de `ResponsiveContainer`;
+      `ResizeObserver` já mockado no setup — mock apenas do `ResponsiveContainer`
+      (dimensionado 600×300 via recharts importOriginal).
 
 ## 6. Mapeamento condição → ícone (fase 01/08)
 
-- [ ] Definir função/componente único `condition → lucide-react icon` (sol/sol parcial/
+- [x] Definir função/componente único `condition → lucide-react icon` (sol/sol parcial/
       nuvens/chuva/tempestade/neve/neblina…) com base em `WeatherCondition.id` ou `main`.
-- [ ] Aplicar em `CurrentWeatherCard`, `HourlyForecast`, `DailyForecast` (sem duplicar lógica).
+- [x] Aplicar em `CurrentWeatherCard`, `HourlyForecast`, `DailyForecast` (sem duplicar lógica).
 
 ---
 
 ## Critério de conclusão da fase 06
 
-- [ ] `npm run typecheck` e `npm run lint` passam.
-- [ ] Testes de `components/weather` criados e passando (`npm run test`).
-- [ ] Nenhum `null`/`Not implemented` restante em `src/components/weather/`.
-- [ ] Widgets fluidos (sem conhecimento de breakpoint — ADR-08) e sem import de
+- [x] `npm run typecheck` e `npm run lint` passam.
+- [x] Testes de `components/weather` criados e passando (`npm run test`).
+- [x] Nenhum `null`/`Not implemented` restante em `src/components/weather/`.
+- [x] Widgets fluidos (sem conhecimento de breakpoint — ADR-08) e sem import de
       `services/`/DTOs.

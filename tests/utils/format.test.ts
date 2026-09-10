@@ -4,8 +4,10 @@ import {
   formatHour,
   formatHumidity,
   formatObservedAt,
+  formatPrecipitation,
   formatPressure,
   formatTemperature,
+  formatVisibility,
   formatWeekday,
   formatWindDirection,
   formatWindSpeed,
@@ -165,6 +167,37 @@ describe('formatPressure', () => {
 
   it('arredonda meio exato para cima', () => {
     expect(formatPressure(1040.5)).toBe('1041 hPa');
+  });
+});
+
+describe('formatPrecipitation', () => {
+  it('formata probabilidade inteira com %', () => {
+    expect(formatPrecipitation(65)).toBe('65%');
+  });
+
+  it('arredonda decimais', () => {
+    expect(formatPrecipitation(20.4)).toBe('20%');
+    expect(formatPrecipitation(20.5)).toBe('21%');
+  });
+
+  it('clamp defensivo em [0, 100]', () => {
+    expect(formatPrecipitation(-10)).toBe('0%');
+    expect(formatPrecipitation(150)).toBe('100%');
+  });
+});
+
+describe('formatVisibility', () => {
+  it('formata visibilidade em km', () => {
+    expect(formatVisibility(10)).toBe('10 km');
+  });
+
+  it('arredonda decimais', () => {
+    expect(formatVisibility(4.4)).toBe('4 km');
+    expect(formatVisibility(4.6)).toBe('5 km');
+  });
+
+  it('clamp defensivo em zero', () => {
+    expect(formatVisibility(-2)).toBe('0 km');
   });
 });
 

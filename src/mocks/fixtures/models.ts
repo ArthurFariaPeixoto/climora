@@ -81,6 +81,17 @@ export const currentWeatherRainModel: CurrentWeather = {
   condition: { id: 501, main: 'Rain', description: 'Chuva leve' },
 };
 
+/**
+ * Variante com `precipitationPct` preenchido — sintética (o endpoint do clima
+ * atual não expõe `pop`, anexo-11 item 4) e usada apenas para exercitar o tile
+ * condicional de precipitação na fase 06 §2.
+ */
+export const currentWeatherWithPrecipModel: CurrentWeather = {
+  ...currentWeatherModel,
+  precipitationPct: 80,
+  condition: { id: 501, main: 'Rain', description: 'Chuva leve' },
+};
+
 // --- Previsão por horário e por dia ---------------------------------------
 
 /**

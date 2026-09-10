@@ -62,11 +62,11 @@
 - [ ] `tests/components/search/SearchBar.test.tsx` — digitar, submeter, teclado, selecionar.
 - [ ] `tests/components/search/SearchResults.test.tsx` — 4 estados + lista.
 - [ ] `tests/components/search/SearchResultItem.test.tsx` — render + `onSelect`.
-- [ ] `tests/components/weather/CurrentWeatherCard.test.tsx` — dados formatados + ícone.
-- [ ] `tests/components/weather/MetricsGrid.test.tsx` — métricas exibidas.
-- [ ] `tests/components/weather/HourlyForecast.test.tsx` — blocos + caso vazio.
-- [ ] `tests/components/weather/DailyForecast.test.tsx` — dias + caso vazio.
-- [ ] `tests/components/weather/WeatherCharts.test.tsx` — render com fallback/mock do
+- [x] `tests/components/weather/CurrentWeatherCard.test.tsx` — dados formatados + ícone.
+- [x] `tests/components/weather/MetricsGrid.test.tsx` — métricas exibidas.
+- [x] `tests/components/weather/HourlyForecast.test.tsx` — blocos + caso vazio.
+- [x] `tests/components/weather/DailyForecast.test.tsx` — dias + caso vazio.
+- [x] `tests/components/weather/WeatherCharts.test.tsx` — render com fallback/mock do
       `ResponsiveContainer` (ResizeObserver já mockado).
 
 ## 9. Composição — `app/*`

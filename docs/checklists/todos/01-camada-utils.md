@@ -57,8 +57,10 @@ Define as regras de termo de busca (vazio, muito curto, caracteres inválidos).
         `windSpeedKmh` e `condition` representativa do grupo;
   - [x] preservar `date` = início do dia (UTC);
   - [x] retornar lista ordenada por data.
-- [ ] (Opcional, se o dashboard precisar) outras métricas derivadas — ex.: média diária,
-      máximos, agregação para gráficos (arquitetura §5.6). **Não implementado** (opcional).
+- [x] (Opcional, se o dashboard precisar) outras métricas derivadas — ex.: média diária,
+      máximos, agregação para gráficos (arquitetura §5.6). **Implementado (fase 06 §5):**
+      `toHourlyChartData(hourly)` → `HourlyChartPoint[]` (`label` via `formatHour`,
+      `temperatureC`, `precipitationPct`) para o `WeatherCharts`.
 - [x] Funções puras, entrada `HourlyForecast[]` → saída `DailyForecast[]`.
 - [x] Criar testes em `tests/utils/selectors.test.ts` (agrupamento, limites de dia/UTC,
       ordenação, blocos vazios).

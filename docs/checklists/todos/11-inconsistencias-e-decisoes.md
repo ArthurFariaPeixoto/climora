@@ -131,8 +131,16 @@
   pura sem dependência de UI (§5.6) — lucide-react entrega componentes React de UI.
 - **Aplicação:** em `CurrentWeatherCard`, `HourlyForecast` e `DailyForecast` (fase 06), com
   base em `WeatherCondition.id`/`main` — sem duplicar a lógica.
+- **Status (fase 06 §1/§3):** mapeamento implementado como componente/layer de UI em
+  `src/components/weather/condition-icon.ts` (`getConditionIcon`) + `ConditionIcon.tsx`
+  (anexo-11 §5.6: `utils/` permanece puro). Aplicado em `CurrentWeatherCard` (§1). No §3 o
+  mapeamento passou a aceitar `string` (`getConditionIconFromText`): o adapter entrega a
+  **descrição** da API (`HourlyForecast.condition`, ex.: "Chuva leve"), então o matching por
+  keywords cobre descrições pt-BR e categorias em inglês — aplicado em `HourlyForecast`
+  (§3) e `DailyForecast` (§4). Aplicação concluída nos três widgets; sem duplicação de
+  lógica (fase 06 §6).
 - **Checkboxes afetados:** `01-camada-utils.md` §2 (item "condição → ícone", decidido/diferido)
-  e `06-feature-clima.md` §6 (item permanece pendente até ser implementado).
+  e `06-feature-clima.md` §6 (item permanece pendente até ser aplicado nos três widgets).
 
 ## Item 12 — estratégia de agregação do `groupHourlyByDay`
 
@@ -169,3 +177,28 @@
   03/07), tratado por `EmptyState`, não por `ErrorState`. A tabela §9.1 descreve a resposta
   da UI, não um membro da taxonomia tipada.
 - **Checkbox afetado:** `01-camada-utils.md` §4; confirmar em `07/08-*`.
+
+## Item 15 — responsividade interna do `MetricsGrid` (grade de `MetricTile`s)
+
+- **Onde:** `docs/checklists/todos/06-feature-clima.md` §2 (texto sugere `grid-cols-2`/
+  `sm:grid-cols-3`); ADR-08 e critério da fase 06 ("widgets fluidos, sem conhecimento de
+  breakpoint").
+- **Conflito:** o literal do §2 (`sm:grid-cols-3`…) faz o widget conhecer viewport via
+  breakpoint, o que contraria ADR-08 (breakpoints só em `DashboardLayout` + estilos de UI).
+- **Resolução (fase 06, §2):** adotada grade **fluida** `grid-cols-[repeat(auto-fit,minmax(9rem,1fr))]`
+  — a grade se adapta à largura do container (ocupando o espaço dado pelo grid) sem
+  breakpoint classes no widget. `MetricsGrid` envolve as métricas num `Card`, como o
+  `CurrentWeatherCard`. A decisão de _quantas colunas e qual ordem_ por breakpoint
+  permanece exclusiva do `DashboardLayout` (fase 07).
+- **Checkbox afetado:** `06-feature-clima.md` §2 (texto do bullet ajustado para refletir a decisão).
+
+## Item 16 — formatadores de precipitação e visibilidade fora da fase 01
+
+- **Onde:** `docs/checklists/todos/06-feature-clima.md` §2 (métricas de precipitação e
+  visibilidade); `src/utils/format/index.ts` (fase 01 não previa esses formatadores).
+- **Decisão (fase 06, §2):** adicionados `formatPrecipitation` (clamp 0–100, "%") e
+  `formatVisibility` (km → "10 km") em `utils/format` — funções puras aditivas à camada já
+  fechada, mantendo "dados formatados via `utils/format`" sem formatação inline nos
+  componentes. A métrica de precipitação é condicional: o clima atual não expõe `pop`
+  (item 4), então o tile só aparece quando `precipitationPct` está presente.
+- **Checkbox afetado:** `06-feature-clima.md` §2.

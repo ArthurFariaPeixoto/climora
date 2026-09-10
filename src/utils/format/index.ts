@@ -11,6 +11,8 @@ const TEMPERATURE_UNIT = '°C';
 const WIND_SPEED_UNIT = 'km/h';
 const HUMIDITY_UNIT = '%';
 const PRESSURE_UNIT = 'hPa';
+const PRECIPITATION_UNIT = '%';
+const VISIBILITY_UNIT = 'km';
 
 const COMPASS_POINTS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'] as const;
 
@@ -44,6 +46,20 @@ export function formatHumidity(humidityPct: number): string {
 /** Converte pressão em hPa para texto de exibição (ex.: "1013 hPa"). */
 export function formatPressure(pressureHpa: number): string {
   return `${Math.round(pressureHpa)} ${PRESSURE_UNIT}`;
+}
+
+/**
+ * Converte probabilidade de precipitação em % para texto de exibição (ex.:
+ * "65%"). Clamp defensivo em [0, 100] (mesma regra de `formatHumidity`).
+ */
+export function formatPrecipitation(precipitationPct: number): string {
+  const clamped = Math.min(100, Math.max(0, precipitationPct));
+  return `${Math.round(clamped)}${PRECIPITATION_UNIT}`;
+}
+
+/** Converte visibilidade em km para texto de exibição (ex.: "10 km"). */
+export function formatVisibility(visibilityKm: number): string {
+  return `${Math.round(Math.max(0, visibilityKm))} ${VISIBILITY_UNIT}`;
 }
 
 /** Hora curta pt-BR em UTC a partir de timestamp unix (ex.: "14h"). */
