@@ -4,7 +4,7 @@ import { ErrorState } from '@/components/state/ErrorState';
 import { LoadingState } from '@/components/state/LoadingState';
 import type { CitySearchStatus } from '@/hooks/use-city-search';
 import type { City } from '@/models/City';
-import { getErrorMessage, type AppError } from '@/utils/errors';
+import type { AppError } from '@/utils/errors';
 
 /**
  * Contrato do painel de resultados da busca (anexo-11 item 9).
@@ -46,16 +46,12 @@ export function SearchResults({
   onRetry,
 }: SearchResultsProps) {
   if (status === 'loading') {
-    return (
-      <div role="status" aria-label="Buscando cidades">
-        <LoadingState />
-      </div>
-    );
+    return <LoadingState label="Buscando cidades" />;
   }
 
   if (status === 'error') {
     if (error === null) return null;
-    return <ErrorState message={getErrorMessage(error)} onRetry={onRetry} />;
+    return <ErrorState error={error} onRetry={onRetry} />;
   }
 
   if (status === 'empty') {
@@ -68,7 +64,7 @@ export function SearchResults({
         id={listboxId}
         role="listbox"
         aria-label="Cidades encontradas"
-        className="max-h-72 overflow-y-auto rounded-md border border-neutral-200 bg-white"
+        className="max-h-72 overflow-y-auto rounded-control border border-line bg-surface"
       >
         {cities.map((city, index) => (
           <SearchResultItem

@@ -25,25 +25,25 @@ interface CurrentWeatherCardProps {
  */
 export function CurrentWeatherCard({ current, cityName }: CurrentWeatherCardProps) {
   return (
-    <Card>
+    <Card variant="highlight">
       <div className="flex h-full flex-col gap-3">
         {cityName ? <h2 className="text-lg font-semibold">{cityName}</h2> : null}
         <div className="flex items-center gap-4">
           <ConditionIcon
             condition={current.condition}
-            className="h-10 w-10 text-neutral-600"
+            className="h-10 w-10 text-ink-muted"
           />
           <div>
             <p className="text-4xl font-bold leading-none">
               {formatTemperature(current.temperatureC)}
             </p>
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-ink-muted">
               Sensação térmica de {formatTemperature(current.feelsLikeC)}
             </p>
           </div>
         </div>
-        <p className="text-neutral-700">{current.condition.description}</p>
-        <p className="mt-auto text-xs text-neutral-400">
+        <p className="text-ink">{current.condition.description}</p>
+        <p className="mt-auto text-xs text-ink-muted">
           Observado em {formatObservedAt(current.observedAt)}
         </p>
       </div>

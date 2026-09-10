@@ -67,6 +67,7 @@ describe('SearchBar (fase 05 §1)', () => {
     expect(combobox()).toHaveAttribute('placeholder', 'Digite o nome de uma cidade');
     expect(combobox()).toHaveAttribute('aria-haspopup', 'listbox');
     expect(combobox()).toHaveAttribute('aria-expanded', 'false');
+    expect(combobox()).toHaveClass('focus-visible:outline-accent');
     expect(combobox()).not.toHaveAttribute('aria-controls');
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     expect(screen.queryByRole('status')).not.toBeInTheDocument();

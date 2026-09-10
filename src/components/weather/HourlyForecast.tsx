@@ -14,7 +14,7 @@ interface HourlyForecastProps {
 }
 
 /** Precipitação do bloco com cor de destaque para leitura do percentual. */
-const PRECIPITATION_CLASS = 'text-xs font-medium text-sky-700';
+const PRECIPITATION_CLASS = 'text-xs font-medium text-accent-strong';
 
 /**
  * Previsão por horário (blocos de 3h).
@@ -42,14 +42,14 @@ export function HourlyForecast({ hourly }: HourlyForecastProps) {
             {hourly.map((block) => (
               <li
                 key={block.time}
-                className="flex min-w-[4.5rem] flex-col items-center gap-1 rounded-lg border border-neutral-200 p-2"
+                className="flex min-w-[4.5rem] flex-col items-center gap-1 rounded-lg border border-line p-2"
               >
-                <span className="text-xs text-neutral-500">
+                <span className="text-xs text-ink-muted">
                   {formatHour(block.time)}
                 </span>
                 <ConditionIcon
                   condition={block.condition}
-                  className="h-6 w-6 text-neutral-600"
+                  className="h-6 w-6 text-ink-muted"
                 />
                 <span className="text-sm font-semibold">
                   {formatTemperature(block.temperatureC)}

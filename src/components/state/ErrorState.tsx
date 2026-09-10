@@ -1,21 +1,56 @@
+import { Cloud, Clock, KeyRound, MapPinOff, SearchX, TriangleAlert, WifiOff } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
 import { Button } from '@/components/ui/Button';
+import {
+  getErrorMessage,
+  isRetryableAppError,
+  type AppError,
+} from '@/utils/errors';
 
 interface ErrorStateProps {
-  message: string;
+  /** Erro da taxonomia (ADR-07, anexo-11 item 13) — ícone e mensagem derivados do `kind`. */
+  error: AppError;
+  /** Ação "tentar novamente". O botão só aparece para erros transitórios. */
   onRetry?: () => void;
 }
 
 /**
- * Estado de interface para erro.
+ * Mapa erro → ícone (fase 08 §2; anexo-11 item 13 — decidido/diferido da fase 01).
  *
- * Consome a taxonomia de erros (`utils/errors`) já traduzida em mensagem
- * amigável e oferece ação de "tentar novamente" quando aplicável.
+ * `utils/` é camada pura sem dependência de UI (§5.6), então o mapa vive no
+ * componente `ErrorState`, lendo a taxa por `kind`.
  */
-export function ErrorState({ message, onRetry }: ErrorStateProps) {
+const ERROR_ICON: Record<AppError['kind'], LucideIcon> = {
+  'invalid-search': SearchX,
+  network: WifiOff,
+  timeout: Clock,
+  'not-found': MapPinOff,
+  unauthorized: KeyRound,
+  server: Cloud,
+  'invalid-data': TriangleAlert,
+};
+
+/**
+ * Estado de interface para erro (fase 08 §2).
+ *
+ * Recebe o erro taxonômico e deriva apresentação via `getErrorMessage`
+ * (mensagem amigável canônica) e `isRetryableAppError` (retry só para falhas
+ * transitórias) — regra única, sem duplicação nos consumidores.
+ */
+export function ErrorState({ error, onRetry }: ErrorStateProps) {
+  const Icon = ERROR_ICON[error.kind];
+  const canRetry = onRetry !== undefined && isRetryableAppError(error);
+
   return (
-    <div role="alert" className="flex flex-col items-center gap-4">
-      <p className="text-neutral-600">{message}</p>
-      {onRetry ? <Button onClick={onRetry}>Tentar novamente</Button> : null}
+    <div role="alert" className="flex flex-col items-center gap-4 p-4 text-center">
+      <Icon className="h-10 w-10 text-danger" aria-hidden="true" />
+      <p className="text-ink-muted">{getErrorMessage(error)}</p>
+      {canRetry ? (
+        <Button variant="secondary" onClick={onRetry}>
+          Tentar novamente
+        </Button>
+      ) : null}
     </div>
   );
 }

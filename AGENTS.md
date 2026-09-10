@@ -194,6 +194,43 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
   `tests/app/weather-flow.test.tsx` (integração com hooks reais: busca → seleção → clima,
   e cenário de erro 500 → retry → recuperação). **Pendente:** fluxo manual no navegador
   (`.env` presente — verificado pelo usuário, item final da fase).
+  Fase 08 em andamento — §1 concluído: tokens semânticos no `@theme` de `src/index.css`
+  (céu/destaques `accent*`, neutros `canvas`/`surface`/`line*`/`ink*`/`skeleton`, erro
+  `danger*`, layout `--radius-card`/`--shadow-card`) consumidos por `components/ui/*`
+  (sem valores mágicos). `Button` ganhou `variant` (`primary`=céu | `secondary` | `ghost` |
+  `danger`) + `size` (`sm`/`md`) + `focus-visible` e `disabled` (type default `button`
+  preservado). `Card` ganhou `variant='default'|'highlight'` e `padding='default'|'none'`
+  + `className` (highlight aplicado no `CurrentWeatherCard`). `MetricTile` com tokens e
+  variante `highlight` (prop sem consumidor — métrica principal é o card do clima).
+  `Skeleton` usa `bg-skeleton`. Testes novos em `tests/components/ui/` (variantes,
+  disabled/onClick/aria, roles). §2 concluído: `components/state/*` viram fonte única de
+  decisão das mensagens/retry — `LoadingState` com `label?` (default "Carregando dados"),
+  raiz `role="status"`+`aria-label` e skeletons compostos no layout dos widgets (card clima
+  `h-28`, grade fluida 3 tiles `h-20`, previsões `h-16`, gráfico `h-40`); `ErrorState` agora
+  recebe `error: AppError` — mensagem via `getErrorMessage` e ícone por `kind` (mapa
+  lucide-react no componente, anexo-11 item 13 resolvido) + retry centralizado (só
+  transitórios: `onRetry && isRetryableAppError`); `EmptyState` com `icon?: LucideIcon`
+  default `CloudOff` + `role="status"`. Consumidores simplificados (`SearchResults` sem
+  wrapper de status aninhado; `WeatherDashboard` sem `getErrorMessage`/`isRetryableAppError`).
+  §3 concluído (tokens): escala tipográfica por **roles** documentada no `index.css`
+  (escala default do Tailwind v4 — h1/h2 `text-lg`, labels `text-sm`, micro `text-xs`,
+  hero `text-4xl`), `--radius-control` aplicado em Button/input/listbox e **contraste WCAG
+  AA** auditado — `--color-ink-muted` subiu para `#525252` (passa ~6.9:1 até sobre
+  `accent-soft`), `ink-soft` restrito a ícones decorativos `aria-hidden`. Migração das cores
+  mágicas restantes para tokens em toda a apresentação (página/header `bg-canvas`/`border-line`/
+  `bg-surface`, listbox, input `border-line-strong`, `SearchResultItem` ativo `bg-accent-soft`,
+  `CurrentWeatherCard`/previsões `text-ink*` e precip `text-accent-strong` no lugar de
+  `text-sky-*`); hex só no Recharts (SVG attr não resolve `var()`, espelham os tokens).
+  §4 concluído (acessibilidade): auditoria da UI — itens já consolidados nas fases 05/08
+  §§2 (combobox WAI-ARIA completo, `role="status"`/`role="alert"`, ícones `aria-hidden`,
+  `aria-label` em botões icon-only) + gap fechado de **focus ring consistente**: o padrão
+  `focus-visible:outline-accent` do `Button` foi estendido ao input de busca (`SearchBar`) e
+  ao botão `role="option"` (`SearchResultItem`) — únicos interativos sem ring; coberto por
+  testes nos dois componentes. Critério da fase: `typecheck`/`lint`/`test` verdes e sem
+  `TODO` em `ui`/`state`; **pendente**: verificação manual de navegação por teclado/leitor de
+  tela no navegador (usuário).
+  suíte completa 32 arquivos / 283 testes verde + `typecheck`/`lint` (build com CSS
+  14.53 kB e chunk do gráfico separado mantido — fase 07).
 
 ## Comandos
 

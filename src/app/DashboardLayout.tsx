@@ -20,8 +20,8 @@ interface DashboardLayoutProps {
  */
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50">
-      <header className="border-b border-neutral-200 bg-white">
+    <div className="flex min-h-screen flex-col bg-canvas">
+      <header className="border-b border-line bg-surface">
         <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6">
           <h1 className="text-lg font-bold">Climora</h1>
         </div>

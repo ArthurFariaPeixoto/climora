@@ -83,6 +83,8 @@ export default function WeatherCharts({ hourly }: WeatherChartsProps) {
                   type="monotone"
                   dataKey="temperatureC"
                   name="Temperatura (°C)"
+                  // Recharts aplica como atributo SVG (não resolve CSS var()) —
+                  // valores espelham os tokens do tema: accent / accent-line.
                   stroke="#0284c7"
                   strokeWidth={2}
                   dot={false}

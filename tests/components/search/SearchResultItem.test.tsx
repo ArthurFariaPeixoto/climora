@@ -31,6 +31,12 @@ describe('SearchResultItem (fase 05 §3)', () => {
     expect(option).toHaveTextContent('BR');
   });
 
+  it('foco visível consistente nas classes do botão (fase 08 §4)', () => {
+    renderItem();
+
+    expect(screen.getByRole('option')).toHaveClass('focus-visible:outline-accent');
+  });
+
   it('cidade sem state não exibe o campo (nem vírgula extra)', () => {
     render(
       <SearchResultItem
@@ -61,7 +67,7 @@ describe('SearchResultItem (fase 05 §3)', () => {
     );
 
     expect(screen.getByRole('option')).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getByRole('option')).toHaveClass('bg-neutral-100');
+    expect(screen.getByRole('option')).toHaveClass('bg-accent-soft');
   });
 
   it('clique chama onSelect com a cidade', async () => {

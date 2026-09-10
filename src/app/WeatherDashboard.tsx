@@ -11,7 +11,6 @@ import { MetricsGrid } from '@/components/weather/MetricsGrid';
 import { useWeather } from '@/hooks/use-weather';
 import type { City } from '@/models/City';
 import type { WeatherRequest } from '@/models/WeatherRequest';
-import { getErrorMessage, isRetryableAppError } from '@/utils/errors';
 
 /**
  * Gráficos do dashboard em chunk separado (arquitetura §13; stack §14). O
@@ -52,12 +51,7 @@ export function WeatherDashboard() {
 
     if (status === 'error' && error !== null) {
       return (
-        <ErrorState
-          message={getErrorMessage(error)}
-          onRetry={
-            isRetryableAppError(error) ? () => void refetch() : undefined
-          }
-        />
+        <ErrorState error={error} onRetry={() => void refetch()} />
       );
     }
 

@@ -43,19 +43,19 @@ export function DailyForecast({ daily }: DailyForecastProps) {
             {daily.map((day) => (
               <li
                 key={day.date}
-                className="flex min-w-[5.5rem] flex-col items-center gap-1 rounded-lg border border-neutral-200 p-2"
+                className="flex min-w-[5.5rem] flex-col items-center gap-1 rounded-lg border border-line p-2"
               >
-                <span className="text-xs text-neutral-500">
+                <span className="text-xs text-ink-muted">
                   {formatWeekday(day.date)}
                 </span>
                 <ConditionIcon
                   condition={day.condition}
-                  className="h-6 w-6 text-neutral-600"
+                  className="h-6 w-6 text-ink-muted"
                 />
                 <span className="text-sm font-semibold">
                   {formatTemperatureRange(day)}
                 </span>
-                <span className="text-xs font-medium text-sky-700">
+                <span className="text-xs font-medium text-accent-strong">
                   {formatPrecipitation(day.precipitationPct)}
                 </span>
               </li>

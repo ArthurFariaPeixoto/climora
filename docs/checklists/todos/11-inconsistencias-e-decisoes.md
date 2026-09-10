@@ -177,6 +177,11 @@
   e `lucide-react` entrega componentes React de UI.
 - **Checkboxes afetados:** `01-camada-utils.md` §4 (item "erro → ícone", decidido/diferido)
   e `08-refinamentos-ui-e-design.md`.
+- **Status (fase 08, §2):** implementado — `ErrorState.tsx` expõe `ERROR_ICON`
+  (`Record<AppError['kind'], LucideIcon>`) lendo a taxonomia por `kind`
+  (`invalid-search→SearchX`, `network→WifiOff`, `timeout→Clock`, `not-found→MapPinOff`,
+  `unauthorized→KeyRound`, `server→Cloud`, `invalid-data→TriangleAlert`), com retry
+  centralizado em `onRetry && isRetryableAppError(error)`.
 
 ## Item 14 — `EmptyDataState` (§9.1) não integra a união `AppError`
 
