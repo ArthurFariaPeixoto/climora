@@ -10,55 +10,69 @@
 
 ## 1. `src/components/search/SearchBar.tsx`
 
-**Hoje retorna `null`.** Implementar:
+**Implementado (anexo-11 item 9: `SearchBar` colapsa `use-city-search`; `SearchResults`
+é apresentação pura por props — continua `null`, preenchido na §2).**
 
-- [ ] Campo de input com `label` acessível (ou `aria-label`).
-- [ ] Estado local do termo digitado (`useState`) — estado de UI (§7).
-- [ ] Submissão via formulário (`onSubmit`) que dispara a busca por `use-city-search`.
-- [ ] Combobox/listbox com ARIA:
-  - [ ] `role="combobox"` no input + `aria-expanded`/`aria-controls`;
-  - [ ] `aria-activedescendant` ao navegar pelos resultados;
-  - [ ] navegação por setas ↑/↓ + Enter/Tab, Escape fecha.
-- [ ] Validação do termo na UI (mensagem de `InvalidSearchError` quando aplicável).
-- [ ] Estados: `idle` (placeholder), `loading` (busca em andamento), erro (mensagem).
-- [ ] Compõe `SearchResults` (ou delega ao pai — decidir contraparte com a fase 07;
-      ver anexo-11 item 9 — fluxo de seleção até `WeatherDashboard`).
-- [ ] Callback `onSelect(city: City)` para a seleção subir até `WeatherDashboard`.
-- [ ] Testes em `tests/components/search/SearchBar.test.tsx` (digitar, submeter, setas,
-      escolher item, estado de erro/loading — hooks mockados, fase 09).
+- [x] Campo de input com `label` acessível (`htmlFor`/`inputId` via `useId`).
+- [x] Estado local do termo digitado (`useState`) — estado de UI (§7): `draft` (digitado)
+      e `submittedTerm` (dispara a consulta ao submeter).
+- [x] Submissão via formulário (`onSubmit`) que dispara a busca por `use-city-search`.
+- [x] Combobox/listbox com ARIA:
+  - [x] `role="combobox"` no input + `aria-expanded`/`aria-controls` (só quando aberto);
+  - [x] `aria-activedescendant` ao navegar pelos resultados;
+  - [x] navegação por setas ↑/↓ (com wrap) + Enter (seleciona/submete) + Tab (blur fecha),
+        Escape fecha e limpa o destaque.
+- [x] Validação do termo na UI (mensagem de `InvalidSearchError` via hook em
+      `role="alert"`).
+- [x] Estados: `idle` (placeholder), `loading` (`role="status"` + `aria-busy`), erro
+      (mensagem).
+- [x] Compõe `SearchResults` (contrato de props definido na §2; busca colapsada aqui —
+      anexo-11 item 9; fluxo de seleção até `WeatherDashboard` na fase 07).
+- [x] Callback `onSelect(city: City)` para a seleção subir até `WeatherDashboard`.
+- [x] Testes em `tests/components/search/SearchBar.test.tsx` (digitar, submeter, setas,
+      escolher item, estado de erro/loading; `use-city-search` mockada — fase 09). Obs.: o
+      `cleanup` explícito do RTL foi adicionado em `tests/setup.ts` (Vitest tem
+      `globals: false` e não registra o auto-cleanup).
 
 ## 2. `src/components/search/SearchResults.tsx`
 
-**Hoje retorna `null`.** Implementar:
+**Implementado.** Consome o resultado por props (busca colapsada apenas em `SearchBar` —
+anexo-11 item 9);
 
-- [ ] Consumir o resultado de `use-city-search` (por props ou colapsando o hook, conforme
-      decisão de composição — anexo-11 item 9).
-- [ ] Renderizar:
-  - [ ] `loading` → `LoadingState`/skeleton;
-  - [ ] `error` → `ErrorState` (com retry quando aplicável);
-  - [ ] `empty` → `EmptyState` ("Nenhuma cidade encontrada");
-  - [ ] `success` → lista de `SearchResultItem`;
-- [ ] `role="listbox"` na lista; itens com `role="option"` e `aria-selected`.
-- [ ] Limites visuais: lista com max-height/scroll quando muitos resultados.
-- [ ] Fechar/limpar resultados ao selecionar (decisão com SearchBar).
-- [ ] Testes em `tests/components/search/SearchResults.test.tsx` (4 estados + interação).
+- [x] Renderizar:
+  - [x] `loading` → `LoadingState` dentro de `role="status"` (`aria-label="Buscando cidades"`);
+  - [x] `error` → `ErrorState` (com retry `onRetry` apenas p/ erros transitórios —
+        `isRetryableAppError`; `InvalidSearchError`/4xx sem botão);
+  - [x] `empty` → `EmptyState` ("Nenhuma cidade encontrada");
+  - [x] `success` → lista de `SearchResultItem`;
+- [x] `role="listbox"` na lista; itens com `role="option"` e `aria-selected` (refletindo o
+      `activeIndex` das setas).
+- [x] Limites visuais: lista com `max-h-72` + `overflow-y-auto` quando muitos resultados.
+- [x] Fechar/limpar resultados ao selecionar (decisão com SearchBar): `SearchBar` limpa
+      `draft`/`submittedTerm` e fecha o painel em `handleSelect`.
+- [x] Testes em `tests/components/search/SearchResults.test.tsx` (4 estados + interação:
+      clique seleciona, hover ativa, retry só quando transitório).
 
 ## 3. `src/components/search/SearchResultItem.tsx`
 
-**Hoje retorna `null` (props já tipadas: `city`, `onSelect`).** Implementar:
+**Implementado (junto da §2, pois a lista depende dele).**
 
-- [ ] Botão acessível (`role="option"` + `aria-selected`) com o conteúdo da cidade.
-- [ ] Exibir `name`, `state?`, `country` (campos do modelo `City` — nunca DTO).
-- [ ] Acionamento por clique e por teclado (Enter/Space — botão nativo cobre isso).
-- [ ] Destaque visual ao está selecionada/active (cursor + `active`).
-- [ ] Testes em `tests/components/search/SearchResultItem.test.tsx` (render + `onSelect`
-      chamado).
+- [x] Botão acessível (`role="option"` + `aria-selected`) com o conteúdo da cidade.
+- [x] Exibir `name`, `state?`, `country` (campos do modelo `City` — nunca DTO).
+- [x] Acionamento por clique e por teclado (Enter/Space — botão nativo cobre isso).
+- [x] Destaque visual ao está selecionada/active (cursor `hover:bg-neutral-50` +
+      `bg-neutral-100` quando ativa).
+- [x] Testes em `tests/components/search/SearchResultItem.test.tsx` (render com/sem `state`,
+      `aria-selected`, `onSelect` e `onActivate` chamados).
 
 ---
 
 ## Critério de conclusão da fase 05
 
-- [ ] `npm run typecheck` e `npm run lint` passam.
-- [ ] Testes da feature criados e passando (`npm run test`).
-- [ ] Nenhum `null`/`Not implemented` restante em `src/components/search/`.
-- [ ] Nenhum import de `services/` ou DTOs nos componentes (regra §5.2).
+**Fase concluída — 17 arquivos / 208 testes verdes (etapa 2):**
+
+- [x] `npm run typecheck` e `npm run lint` passam.
+- [x] Testes da feature criados e passando (`npm run test`).
+- [x] Nenhum `null`/`Not implemented` restante em `src/components/search/` (os dois
+      `return null` são intencionais: `idle` renderiza nada; guard `error === null`).
+- [x] Nenhum import de `services/` ou DTOs nos componentes (regra §5.2).

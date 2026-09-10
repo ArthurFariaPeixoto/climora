@@ -104,8 +104,17 @@
 - **A ponderação:** quem renderiza `SearchResults` (o próprio `SearchBar` console com o
   dropdown, ou o `WeatherDashboard`)? Ambos válidos; escolher o de menor prop-drilling
   mantendo ADR-11.
-- **Resolução:** na **fase 05/07**, definir e testar o contrato (`onSelect` + estado do
-  termo) — sem estado global.
+- **Resolução (fase 05, §1):** **`SearchBar` colapsa `use-city-search`** (fluxo `§6`:
+  "Usuário digita → SearchBar → use-city-search → … → SearchResults") e guarda o termo em
+  dois estados de UI: `draft` (digitado) e `submittedTerm` (submetido, dispara a consulta).
+  `SearchResults` é **apresentação pura** por props (`listboxId`, `status`, `cities`,
+  `error`, `activeIndex`, `onSelect`, `onActivate`, `onRetry`) — contrato definido na fase
+  05 §1, rendering na §2. `SearchResultItem` recebe a cidade + `id` (alvo do
+  `aria-activedescendant`), `active`, `onSelect`/`onActivate`. **Ao selecionar**, o
+  `SearchBar` limpa `draft`/`submittedTerm` e fecha o painel (decisão §2 "fechar/limpar"). A
+  seleção sobe via `onSelect(city)` até `WeatherDashboard` (fase 07) — sem estado global
+  (ADR-04/ADR-11). Clique dentro do painel (item/retry) não fecha o painel por blur:
+  `onBlur` verifica `relatedTarget` no `panelRef`.
 - **Checkbox afetado:** `05-feature-busca.md` §1; `07-composicao-dashboard.md` §1.
 
 ## Item 10 — estado de validação no início da execução dos checklists

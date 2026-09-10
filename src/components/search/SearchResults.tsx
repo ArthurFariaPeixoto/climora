@@ -1,12 +1,88 @@
+import { SearchResultItem } from '@/components/search/SearchResultItem';
+import { EmptyState } from '@/components/state/EmptyState';
+import { ErrorState } from '@/components/state/ErrorState';
+import { LoadingState } from '@/components/state/LoadingState';
+import type { CitySearchStatus } from '@/hooks/use-city-search';
+import type { City } from '@/models/City';
+import { getErrorMessage, type AppError } from '@/utils/errors';
+
+/**
+ * Contrato do painel de resultados da busca (anexo-11 item 9).
+ *
+ * `SearchBar` colapsa `use-city-search` e entrega os resultados aqui por
+ * props — apresentação pura, sem colapsar o hook.
+ */
+export interface SearchResultsProps {
+  /** `id` do `listbox` referenciado por `aria-controls`/`aria-activedescendant`. */
+  listboxId: string;
+  status: CitySearchStatus;
+  cities: City[];
+  error: AppError | null;
+  /** Índice do item destacado pela navegação por teclado (setas). */
+  activeIndex: number;
+  onSelect: (city: City) => void;
+  /** Destaca o item sob hover/ativação do teclado. */
+  onActivate: (index: number) => void;
+  /** Ação "tentar novamente" — presente apenas para erros transitórios. */
+  onRetry?: () => void;
+}
+
 /**
  * Lista de resultados da busca de cidades.
  *
- * Renderiza os resultados expostos pelo `use-city-search` (via `SearchBar`),
- * delegando cada item a `SearchResultItem`.
- *
- * TODO: implementar renderização da lista (sucesso, vazio, erro) quando a
- * feature for desenvolvida.
+ * Apresentação pura dos estados expostos pelo `use-city-search` (via
+ * `SearchBar`, anexo-11 item 9): `loading`/`error`/`empty` usam os
+ * componentes de estado; `success` renderiza um `listbox` WAI-ARIA com um
+ * `SearchResultItem` (botão `role="option"`) por cidade.
  */
-export function SearchResults() {
+export function SearchResults({
+  listboxId,
+  status,
+  cities,
+  error,
+  activeIndex,
+  onSelect,
+  onActivate,
+  onRetry,
+}: SearchResultsProps) {
+  if (status === 'loading') {
+    return (
+      <div role="status" aria-label="Buscando cidades">
+        <LoadingState />
+      </div>
+    );
+  }
+
+  if (status === 'error') {
+    if (error === null) return null;
+    return <ErrorState message={getErrorMessage(error)} onRetry={onRetry} />;
+  }
+
+  if (status === 'empty') {
+    return <EmptyState message="Nenhuma cidade encontrada" />;
+  }
+
+  if (status === 'success') {
+    return (
+      <div
+        id={listboxId}
+        role="listbox"
+        aria-label="Cidades encontradas"
+        className="max-h-72 overflow-y-auto rounded-md border border-neutral-200 bg-white"
+      >
+        {cities.map((city, index) => (
+          <SearchResultItem
+            key={`${city.lat}-${city.lon}`}
+            id={`${listboxId}-option-${index}`}
+            city={city}
+            active={index === activeIndex}
+            onSelect={onSelect}
+            onActivate={() => onActivate(index)}
+          />
+        ))}
+      </div>
+    );
+  }
+
   return null;
 }

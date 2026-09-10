@@ -94,6 +94,19 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
   `onUnhandledRequest: 'error'` forte garantida e suíte completa (14 arquivos / 180 testes,
   smoke `App` incluso) verde **sem rede real** — critérios de conclusão da fase 04 atendidos
   (`typecheck` + `lint` + `test`).
+  Fase 05 em andamento — §1 a §3 concluídos: `SearchBar` implementado (colapsa
+  `use-city-search` — anexo-11 item 9; `draft`/`submittedTerm` como estados de UI; submissão
+  via formulário; combobox WAI-ARIA com `aria-expanded`/`aria-controls`/`aria-activedescendant`,
+  setas com wrap, Enter seleciona/submete, Escape e Tab fecham; `onBlur` verifica
+  `relatedTarget` p/ não fechar ao clicar dentro do painel). `SearchResults` renderiza os 4
+  estados (`LoadingState` em `role="status"`, `ErrorState` com retry só p/ transitórios via
+  `onRetry`/`refetch`, `EmptyState` "Nenhuma cidade encontrada", `listbox` com
+  `max-h-72`/scroll); `SearchResultItem` é botão `role="option"` com `aria-selected`,
+  `name`/`state?`/`country` e destaque visual — contrato de `SearchResultsProps` definido
+  (apresentação pura por props). Testes: `tests/components/search/SearchBar.test.tsx`,
+  `SearchResults.test.tsx` (4 estados + interação) e `SearchResultItem.test.tsx`
+  (`use-city-search` mockada). Infra de teste: `cleanup` explícito adicionado em
+  `tests/setup.ts` (Vitest com `globals: false` não registra o auto-cleanup do RTL).
 
 ## Comandos
 
