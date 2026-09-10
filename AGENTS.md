@@ -157,6 +157,43 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
   `tests/utils/selectors.test.ts`. `src/components/weather/` sem `null`/`Not implemented`.
   Fase 06 concluída (§1–§6) nos itens de componentes/testes; o critério de lazy (chunk
   separado) e o `npm run build` são validados na fase 07.
+  Fase 07 em andamento — §1 concluído: `WeatherDashboard` implementado (arquitetura §5.1):
+  cidade selecionada via `useState` (elo fases A→B, §6), `use-weather` consumido a partir
+  de `WeatherRequest` montado inline de `City` (`lat`/`lon`/`scope: 'current+forecast'` —
+  decisão fase 03 §3), `SearchBar` (sem prop-drilling; `SearchResults` fica no próprio
+  `SearchBar` — anexo-11 item 9), estados `idle`/`loading`/`error`/`empty`/`success` com
+  `EmptyState`/`LoadingState`/`ErrorState` (retry só p/ transitórios), widgets
+  `CurrentWeatherCard`/`MetricsGrid`/`HourlyForecast`/`DailyForecast` +
+  `WeatherCharts` **lazy** (`React.lazy` + `<Suspense>` só no gráfico — §13), blocos em
+  coluna fluida sem breakpoints (ADR-08; grade é do §2/DashboardLayout). Testes em
+  `tests/app/WeatherDashboard.test.tsx` (hooks mockados — fase 09 — cobrem idle,
+  busca→seleção→clima, loading, erro transitório/não-transitório e empty).
+  §2 concluído: `DashboardLayout` implementado (arquitetura §5.1/§12, ADR-08) — shell
+  responsivo com header (`<h1>` "Climora" — promovido de marca não-heading no §3 ao
+  remover o placeholder do `App`), `<main>` com `max-w-6xl`/padding consistente e
+  grade `grid-cols-1 md:grid-cols-2 xl:grid-cols-4` p/ `children`. Composição delegada ao
+  `App` (§3). Grade declarada e testável por classes; a disposição multi-coluna visual dos
+  widgets fica explícita p/ a fase 08 (polimento). Testes em
+  `tests/app/DashboardLayout.test.tsx` (banner/marca/children + classes de grid).
+  §3 concluído: `App` substituiu o placeholder por `DashboardLayout` + `WeatherDashboard`
+  (arquitetura §5.1), h1 "Climora" agora vive no header; `WeatherDashboard` usa
+  `col-span-full` na raiz p/ ocupar a largura total da grade (single-column até a fase 08).
+  Smoke `tests/app/App.test.tsx` atualizado: render com `QueryClientProvider` de teste
+  (`createTestQueryClient`) — no estado inicial os hooks reais não disparam requisição
+  (idle), zero chamadas MSW; valida h1 no header + combobox + prompt inicial (placeholder
+  removido).
+  §4 concluído: `main.tsx` com defaults de provider fechados (anexo-11 item 5 resolvido na
+  fase 07 §4) — `staleTime: 0` global mantido (validade vem do `staleTime` por consulta
+  60s/5min), `retry: 1` mantido (rede de segurança global; features têm retry
+  transitório-only máx. 2) e `refetchOnWindowFocus: false` adicionado (refetch
+  determinístico — só explícito: busca, troca de cidade, `retry`; nada de refetch por foco
+  da janela em dev/banca). `<Suspense>` do gráfico lazy permanece no `WeatherDashboard`
+  (sem fallback global). Fase 07 §1–§4 concluídos.
+  Critérios de conclusão da fase 07: 4/5 fechados — suíte completa 25 arquivos / 244 testes
+  verde, build com chunk separado do gráfico e fluxo ponta a ponta sob MSW exercitado por
+  `tests/app/weather-flow.test.tsx` (integração com hooks reais: busca → seleção → clima,
+  e cenário de erro 500 → retry → recuperação). **Pendente:** fluxo manual no navegador
+  (`.env` presente — verificado pelo usuário, item final da fase).
 
 ## Comandos
 

@@ -5,14 +5,32 @@ interface DashboardLayoutProps {
 }
 
 /**
- * Grade responsiva do dashboard.
+ * Grade responsiva do dashboard (arquitetura §5.1, §12; ADR-08).
  *
- * Única camada responsável por definir a disposição e as quebras de layout
- * (1/2/N colunas por breakpoint — ADR-08). Os widgets permanecem fluidos e
- * ignoram o tamanho da tela.
+ * Única camada que decide layout/breakpoints: 1 coluna em mobile, 2 em tablet
+ * (`md`) e N em desktop (`xl`). Os widgets permanecem fluidos e ignoram o
+ * tamanho da tela — ocupam o espaço dado pelo grid.
  *
- * TODO: implementar a grade responsiva real quando o dashboard for montado.
+ * Composição (fase 07 §3): `DashboardLayout` recebe `children` e delega ao
+ * `App` a montagem (`WeatherDashboard`); o header abriga o `<h1>` "Climora"
+ * (promovido ao remover o placeholder do `App`). A disposição visual
+ * multi-coluna dos widgets só se materializa quando os blocos forem itens
+ * diretos da grade (fase 08 — polimento visual); aqui a grade existe e é
+ * testável pelas classes.
  */
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  return <div className="w-full">{children}</div>;
+  return (
+    <div className="flex min-h-screen flex-col bg-neutral-50">
+      <header className="border-b border-neutral-200 bg-white">
+        <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6">
+          <h1 className="text-lg font-bold">Climora</h1>
+        </div>
+      </header>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {children}
+        </div>
+      </main>
+    </div>
+  );
 }

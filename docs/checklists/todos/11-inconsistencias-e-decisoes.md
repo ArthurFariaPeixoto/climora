@@ -77,6 +77,16 @@
   de ~60s e um `retry` **por consulta** que só reexecuta erros transitórios
   (`network`/`timeout`/`server`, até 2 tentativas) — 4xx (401/429), `invalid-data` e abort
   não são repetidos. Pendente avaliar o default global na fase 07 (§4).
+- **Resolução final (fase 07, §4 — `main.tsx`):**
+  - `staleTime: 0` **mantido** — default conservador: a validade dos dados vem do
+    `staleTime` por consulta (`city-query` ~60s, `weather-query` ~5min); query futura sem
+    `staleTime` revalida a data (sem gratuidade de cache).
+  - `retry: 1` **mantido** — rede de segurança global; as features já definem retry próprio
+    (transitórios-only, máx. 2).
+  - `refetchOnWindowFocus: false` **adicionado** — refetch determinístico: acontece apenas
+    de forma explícita (nova busca, troca de cidade, `retry`), nunca por foco da janela;
+    evita reexecuções surpreendentes em dev/banca/avaliação.
+  - `<Suspense>` do gráfico lazy **continua no `WeatherDashboard`** (sem fallback global).
 - **Checkbox afetado:** `03-camada-hooks.md` §1/§2 e `07-composicao-dashboard.md` §4.
 
 ## Item 6 — Smoke test de `App.test.tsx` valida o placeholder
