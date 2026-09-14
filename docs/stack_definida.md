@@ -155,11 +155,17 @@ A arquitetura distingue quatro tipos de estado (§7). A stack escolhida respeita
 ```
 hooks/
 ├── data/
-│   ├── city-query        # useCitySearchQuery(term) — chave ['cities', term]
-│   └── weather-query     # useWeatherQuery(city, scope) — chave ['weather', city+scope]
+│   ├── city-query        # useCitySearchQuery({ term, enabled }) — chave ['cities', term]
+│   └── weather-query     # useWeatherQuery({ city: WeatherRequest, enabled }) — chave ['weather', city]
 ├── use-city-search.ts    # fachada: valida termo, traduz → idle/loading/success/empty/error + City[]
 └── use-weather.ts        # fachada: conduz refetch/cancelamento → CurrentWeather + Forecasts + estados
 ```
+
+> Ajuste da fase 10 (documentação final): a interface real das queries e dos
+> fetchers (fase 03) usa `WeatherRequest` (`{ lat, lon, scope }` — o modelo
+> `City` não é mais necessário para o clima) e `enabled` no lugar de `scope`/
+> cidade solta; `daily` não trafega na query (derivado via `groupHourlyByDay`).
+> Alinhamento de implementação, sem mudança de arquitetura/stack.
 
 ---
 
@@ -183,7 +189,7 @@ A arquitetura é explícita e **agnóstica de transporte** quanto a _onde_ e _co
 - `services/endpoints/` — rotas e **funções puras** de construção de parâmetros (`buildCitySearchQuery(term)`, `buildWeatherQuery(city, scope)`). A estrutura da API vive aqui, não espalhada.
 - `services/dtos/` — tipos que espelham a resposta da OpenWeather.
 - `services/adapters/` — funções puras DTO → `models`.
-- `services/repositories/` — fetchers `searchCities(term)` e `getWeather(city, scope)`: orquestram client + endpoint + adapter e retornam **apenas `models`**. São os iteradores das queries do TanStack Query (ADR-10).
+- `services/repositories/` — fetchers `searchCities(term, signal)` e `getWeather(request: WeatherRequest, signal)`: orquestram client + endpoint + adapter e retornam **apenas `models`** (`City[]` e `WeatherResult { current, hourly }` — sem `daily`, derivado em `utils/selectors`). São os iteradores das queries do TanStack Query (ADR-10); ambos repassam o `AbortSignal` da query ao transporte (ADR-06).
 
 **Nenhum componente, hook de feature ou utilitário importa o Axios.** A UI nunca conhece DTOs nem detalhes da API (§8 arquitetura). Em testes, o transporte é simulado via **MSW em nível de rede** (ver §16) — com Axios no browser/jsdom, o MSW intercepta o XHR; em Node, o adapter HTTP.
 
@@ -377,10 +383,15 @@ VITE_WEATHER_API_BASE_URL=     # default: https://api.openweathermap.org (obriga
 | Instalar        | `npm install`                                           |
 | Desenvolvimento | `npm run dev` (Vite dev server, porta 5173)             |
 | Typecheck       | `npm run typecheck`                                     |
-| Testes          | `npm run test` (Vitest watch) / `npm run test:run` (CI) |
+| Testes          | `npm run test` (executa 1×) / `npm run test:watch` (watch) |
 | Lint            | `npm run lint`                                          |
 | Build           | `npm run build` (typecheck + `vite build` → `dist/`)    |
 | Preview local   | `npm run preview`                                       |
+
+> Ajuste da fase 10 (documentação final): a tabela original citava `npm run
+> test:run` (CI), script inexistente no `package.json`. Alinhado à
+> implementação — `test` = execução única, `test:watch` = modo watch — sem
+> mudança de stack.
 
 **Requisitos:** Node.js 20.19+ ou 22.12+ (Vite 7), npm.
 
@@ -536,16 +547,21 @@ Nenhum trade-off conflita com decisões arquiteturais — todos são "custo baix
 
 ## 25. Próximos passos
 
-1. **Scaffold do projeto:** `npm create vite@latest` (react-ts) + instalação das dependências da §20.
-2. **Configuração de base:** Tailwind v4 (`@tailwindcss/vite`), ESLint flat + Prettier, `vitest` + setup (`jsdom`, jest-dom, mock de `ResizeObserver`), `.env.example`/`.gitignore`.
-3. **Domínio e contratos:** `models/` (interfaces) + `utils/errors/` (taxonomia) + `mocks/` (fixtures iniciais).
-4. **Serviços:** `services/dtos` (contratos OpenWeather) → `endpoints` → `adapters` → `http` (axios + key + classificador) → `repositories`.
-5. **Data-fetching:** `hooks/data/city-query` e `weather-query` (chaves, `staleTime`, fetchers).
-6. **Hooks de feature:** `use-city-search` e `use-weather` (tradução para `idle/loading/success/empty/error`).
-7. **UI:** `components/ui` + `state` → `search` → `weather` (widgets) → `DashboardLayout` → `WeatherDashboard`.
-8. **Gráficos:** `WeatherCharts` com Recharts, lazy-loaded.
-9. **Testes** por camada (na ordem utils → adapters → http/repositories → queries → hooks → componentes → composição).
-10. **Deploy** do `dist/` em host estático (Vercel/Netlify/GitHub Pages).
+> **Status (fase 10 — documentação final):** passos 1–9 **concluídos**; passo 10
+> **não executado** — o artefato estático (`dist/`) está pronto e validado
+> (`npm run preview` na fase 10), mas a publicação em host externo fica para a
+> entrega/avaliação (a fase 10 é QA + entrega, não publica).
+
+1. ✓ **Scaffold do projeto:** `npm create vite@latest` (react-ts) + instalação das dependências da §20.
+2. ✓ **Configuração de base:** Tailwind v4 (`@tailwindcss/vite`), ESLint flat + Prettier, `vitest` + setup (`jsdom`, jest-dom, mock de `ResizeObserver`), `.env.example`/`.gitignore`.
+3. ✓ **Domínio e contratos:** `models/` (interfaces) + `utils/errors/` (taxonomia) + `mocks/` (fixtures iniciais).
+4. ✓ **Serviços:** `services/dtos` (contratos OpenWeather) → `endpoints` → `adapters` → `http` (axios + key + classificador) → `repositories`.
+5. ✓ **Data-fetching:** `hooks/data/city-query` e `weather-query` (chaves, `staleTime`, fetchers).
+6. ✓ **Hooks de feature:** `use-city-search` e `use-weather` (tradução para `idle/loading/success/empty/error`).
+7. ✓ **UI:** `components/ui` + `state` → `search` → `weather` (widgets) → `DashboardLayout` → `WeatherDashboard`.
+8. ✓ **Gráficos:** `WeatherCharts` com Recharts, lazy-loaded (chunk separado confirmado no build da fase 10).
+9. ✓ **Testes** por camada (utils → adapters → http/repositories → queries → hooks → componentes → composição) — suíte completa verde (fase 09/10).
+10. ⏭ **Deploy** do `dist/` em host estático (Vercel/Netlify/GitHub Pages) — **não publicado**: artefato pronto e validado, publicação delegada à entrega/avaliação.
 
 ---
 

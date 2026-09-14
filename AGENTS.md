@@ -245,6 +245,19 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
     com MSW + `React.lazy` do Recharts estourava o timeout padrão de 5s (e os `findByRole`
     de 1s) sob a suíte completa → `it(..., 20_000)` + `findByRole(..., { timeout: 10_000 })`
     no gráfico; teste verde isolado e na suíte.
+    Fase 10 concluída (§1–§6, QA + entrega): §1—performance (chunk do gráfico separado;
+    cache/dedup por `staleTime` 60s/5min; concorrência/abort ADR-06; retry não martela 4xx);
+    §2—acessibilidade; §3—erros/estados (401 como configuração, 429/5xx → retry,
+    NotFound → EmptyState, sem `AxiosError`/DTO cru na UI); §4—segurança (`.env` fora do
+    repositório, `VITE_*` só em `services/http`, limitação da key documentada no README);
+    §5—validação definitiva (lint/typecheck/test/build/preview verdes; `format:check` sem
+    diffs); §6—documentação final: README ganhou "Funcionalidades" e "Deploy" (artefato
+    estático pronto, **sem publicação**); `stack_definida.md` §25 com passos 1–9 concluídos
+    e passo 10 "não publicado", §19 (`test`/`test:watch`) e §8 (queries com `WeatherRequest`/
+    `enabled`, fetchers com `AbortSignal`) ajustados como alinhamento factual de implementação;
+    `decisoes_arquiteturais.md` conferido e **fiel** (sem alterações). Projeto **entregável
+    para avaliação**; item opcional da fase 02 (fluxo manual com API real) não executado — nota
+    registrada.
 
 ## Comandos
 

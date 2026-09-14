@@ -133,3 +133,8 @@ validação de chave no load (lança se `VITE_WEATHER_API_KEY` ausente).
 - [x] Nenhum `Not implemented` restante em `src/services/`.
 - [ ] Fluxo manual opcional: com `.env` preenchido e apenas MSW desativado, uma chamada a
       `searchCities('São Paulo')` retorna `City[]`. (Parâmetro: execução sem `npm run dev`.)
+
+> **Nota (fase 10, documentação final):** item **opcional não executado** — exige chamada à
+> API real com chave válida, fora da suíte de QA (que é 100% MSW). O fluxo real foi validado
+> por `npm run preview` (fase 10 §5) e pela suíte de integração MSW; o item permanece
+> desmarcado por não ter sido verificado com rede real (regra: não concluir sem verificação).
