@@ -274,6 +274,12 @@ export const geocodingNonFiniteLatDto = {
   lat: Number.NaN,
 } as unknown as GeocodingLocationDto;
 
+/** Geocodificação com `lon` não finita. */
+export const geocodingNonFiniteLonDto = {
+  ...saoPauloGeoDto,
+  lon: Number.NaN,
+} as unknown as GeocodingLocationDto;
+
 /** Geocodificação com `country` em branco. */
 export const geocodingBlankCountryDto = {
   ...saoPauloGeoDto,

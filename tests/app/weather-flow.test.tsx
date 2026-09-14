@@ -27,9 +27,7 @@ async function searchAndSelect(user: UserEvent) {
     'são paulo',
   );
   await user.click(screen.getByRole('button', { name: 'Buscar' }));
-  await user.click(
-    await screen.findByRole('option', { name: /são paulo/i }),
-  );
+  await user.click(await screen.findByRole('option', { name: /são paulo/i }));
 }
 
 describe('Fluxo de clima com MSW (fase 07 — critério de conclusão)', () => {
@@ -51,9 +49,7 @@ describe('Fluxo de clima com MSW (fase 07 — critério de conclusão)', () => {
     expect(
       await screen.findByRole('heading', { name: 'São Paulo' }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(/sensação térmica de 22°c/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/sensação térmica de 22°c/i)).toBeInTheDocument();
     // '65%' também aparece em blocos de previsão (precipitação) — escopa pelo
     // tile de Umidade do `MetricsGrid`.
     const umidadeTile = screen.getByText('Umidade').closest('div');
@@ -66,18 +62,28 @@ describe('Fluxo de clima com MSW (fase 07 — critério de conclusão)', () => {
       screen.getByRole('heading', { name: 'Previsão diária' }),
     ).toBeInTheDocument();
     // O gráfico é `React.lazy` (chunk separado) — `findByRole` aguarda a
-    // resolução do import dinâmico real pelo `Suspense`.
+    // resolução do import dinâmico real pelo `Suspense`. Timeout explícito
+    // maior que o padrão (1s): sob a suíte completa (MSW ~30s + workers em
+    // paralelo) o import dinâmico do Recharts pode ultrapassar 1s.
     expect(
-      await screen.findByRole('heading', {
-        name: 'Temperatura e precipitação por hora',
-      }),
+      await screen.findByRole(
+        'heading',
+        {
+          name: 'Temperatura e precipitação por hora',
+        },
+        { timeout: 10_000 },
+      ),
     ).toBeInTheDocument();
     expect(
-      await screen.findByRole('img', {
-        name: 'Gráfico de temperatura e precipitação por hora',
-      }),
+      await screen.findByRole(
+        'img',
+        {
+          name: 'Gráfico de temperatura e precipitação por hora',
+        },
+        { timeout: 10_000 },
+      ),
     ).toBeInTheDocument();
-  });
+  }, 20_000);
 
   it('erro transitório (500) → estado de erro e retry recupera o dashboard', async () => {
     server.use(weatherServerErrorHandler);

@@ -6,6 +6,7 @@ import {
   geocodingBlankCountryDto,
   geocodingMissingNameDto,
   geocodingNonFiniteLatDto,
+  geocodingNonFiniteLonDto,
   lisboaGeoDto,
   rioGeoDto,
   saoPauloGeoDto,
@@ -61,6 +62,13 @@ describe('mapCityDtoToModel', () => {
       requireInvalidData(() => mapCityDtoToModel(geocodingNonFiniteLatDto))
         .message,
     ).toContain('lat');
+  });
+
+  it('lança InvalidDataError para lon não finita', () => {
+    expect(
+      requireInvalidData(() => mapCityDtoToModel(geocodingNonFiniteLonDto))
+        .message,
+    ).toContain('lon');
   });
 
   it('lança InvalidDataError para country vazio', () => {

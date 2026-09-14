@@ -1,47 +1,57 @@
 import { describe, expect, it } from 'vitest';
 
-import { getErrorMessage } from '@/utils/errors';
+import { getErrorMessage, isRetryableAppError } from '@/utils/errors';
 import type { AppError } from '@/utils/errors';
 
-function makeError(kind: AppError['kind'], message = 'mensagem técnica'): AppError {
+function makeError(
+  kind: AppError['kind'],
+  message = 'mensagem técnica',
+): AppError {
   return { kind, message };
 }
 
 describe('getErrorMessage', () => {
   it('propaga a mensagem específica da validação para invalid-search', () => {
-    const error = makeError('invalid-search', 'Digite pelo menos 3 caracteres.');
+    const error = makeError(
+      'invalid-search',
+      'Digite pelo menos 3 caracteres.',
+    );
     expect(getErrorMessage(error)).toBe('Digite pelo menos 3 caracteres.');
   });
 
   it('retorna mensagem de falta de conexão para network', () => {
-    expect(getErrorMessage(makeError('network'))).toBe('Sem conexão com a internet.');
+    expect(getErrorMessage(makeError('network'))).toBe(
+      'Sem conexão com a internet.',
+    );
   });
 
   it('retorna mensagem de lentidão para timeout', () => {
     expect(getErrorMessage(makeError('timeout'))).toBe(
-      'A conexão está lenta. Tente novamente.'
+      'A conexão está lenta. Tente novamente.',
     );
   });
 
   it('retorna mensagem de cidade não encontrada para not-found', () => {
-    expect(getErrorMessage(makeError('not-found'))).toBe('Cidade não encontrada.');
+    expect(getErrorMessage(makeError('not-found'))).toBe(
+      'Cidade não encontrada.',
+    );
   });
 
   it('retorna mensagem de configuração para unauthorized', () => {
     expect(getErrorMessage(makeError('unauthorized'))).toBe(
-      'Configuração inválida: verifique a chave de API.'
+      'Configuração inválida: verifique a chave de API.',
     );
   });
 
   it('retorna mensagem de indisponibilidade para server', () => {
     expect(getErrorMessage(makeError('server'))).toBe(
-      'Serviço indisponível, tente novamente.'
+      'Serviço indisponível, tente novamente.',
     );
   });
 
   it('retorna mensagem de dados incompletos para invalid-data', () => {
     expect(getErrorMessage(makeError('invalid-data'))).toBe(
-      'Dados incompletos. Tente novamente mais tarde.'
+      'Dados incompletos. Tente novamente mais tarde.',
     );
   });
 
@@ -54,7 +64,9 @@ describe('getErrorMessage', () => {
       'server',
       'invalid-data',
     ] as const) {
-      expect(getErrorMessage(makeError(kind))).not.toContain('mensagem técnica');
+      expect(getErrorMessage(makeError(kind))).not.toContain(
+        'mensagem técnica',
+      );
     }
   });
 
@@ -69,6 +81,25 @@ describe('getErrorMessage', () => {
       'invalid-data',
     ] as const) {
       expect(getErrorMessage(makeError(kind, kind))).not.toBe('');
+    }
+  });
+});
+
+describe('isRetryableAppError', () => {
+  it('retorna true apenas para falhas transitórias (network, timeout, server)', () => {
+    for (const kind of ['network', 'timeout', 'server'] as const) {
+      expect(isRetryableAppError(makeError(kind))).toBe(true);
+    }
+  });
+
+  it('retorna false para erros que não melhoram com retry', () => {
+    for (const kind of [
+      'invalid-search',
+      'not-found',
+      'unauthorized',
+      'invalid-data',
+    ] as const) {
+      expect(isRetryableAppError(makeError(kind))).toBe(false);
     }
   });
 });

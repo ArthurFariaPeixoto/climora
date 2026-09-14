@@ -229,8 +229,22 @@ Regra de ouro (fase 00 §2): uma fase só termina com todos os checkboxes marcad
   testes nos dois componentes. Critério da fase: `typecheck`/`lint`/`test` verdes e sem
   `TODO` em `ui`/`state`; **pendente**: verificação manual de navegação por teclado/leitor de
   tela no navegador (usuário).
-  suíte completa 32 arquivos / 283 testes verde + `typecheck`/`lint` (build com CSS
+  suíte completa 32 arquivos / 285 testes verde + `typecheck`/`lint` (build com CSS
   14.53 kB e chunk do gráfico separado mantido — fase 07).
+  Fase 09 em andamento — §1–§2 concluídos: §1 (`utils/`) — os 4 arquivos de `tests/utils/*`
+  já existiam e eram representativos após a auditoria; fechado o gap de cobertura da taxonomia
+  com casos dedicados de `isRetryableAppError` (network/timeout/server → `true`;
+  invalid-search/not-found/unauthorized/invalid-data → `false`) em `tests/utils/errors.test.ts`
+  (mensagens dos 7 tipos + "não vaza mensagem técnica" já cobertos; ícones por tipo no
+  `ErrorState`, fase 08). Ícones por tipo de erro continuam fora de `utils/` (anexo-11
+  item 13). §2 (`adapters`): suíte já representativa (feliz com conversões m→km, m/s→km/h,
+  pop→% + payloads corrompidos → `InvalidDataError` em `tests/services/adapters/*`);
+  fechado gap de simetria com `geocodingNonFiniteLonDto` (lat/lon usam o mesmo `requireFinite`
+  mas a mensagem pinava o campo) em `dto.ts` + caso dedicado em `city.adapter.test.ts`.
+  Estabilizado `tests/app/weather-flow.test.tsx` (fase 07): o fluxo de integração
+  com MSW + `React.lazy` do Recharts estourava o timeout padrão de 5s (e os `findByRole`
+  de 1s) sob a suíte completa → `it(..., 20_000)` + `findByRole(..., { timeout: 10_000 })`
+  no gráfico; teste verde isolado e na suíte.
 
 ## Comandos
 
