@@ -21,10 +21,14 @@ export function EmptyState({
   return (
     <div
       role="status"
-      className="flex flex-col items-center gap-2 p-4 text-center"
+      className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-line-strong/80 bg-surface/50 p-8 text-center"
     >
-      <Icon className="h-8 w-8 text-ink-soft" aria-hidden="true" />
-      <span className="text-ink-muted">{message}</span>
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-canvas text-ink-soft shadow-2xs">
+        <Icon className="h-6 w-6 text-ink-soft" aria-hidden="true" />
+      </div>
+      <span className="max-w-sm text-sm font-medium text-ink-muted leading-relaxed">
+        {message}
+      </span>
     </div>
   );
 }

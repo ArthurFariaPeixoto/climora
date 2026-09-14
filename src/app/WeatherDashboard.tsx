@@ -60,15 +60,21 @@ export function WeatherDashboard() {
 
     if (status === 'success' && current !== null) {
       return (
-        <>
-          <CurrentWeatherCard current={current} cityName={city?.name} />
-          <MetricsGrid current={current} />
+        <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <CurrentWeatherCard current={current} cityName={city?.name} />
+            </div>
+            <div className="lg:col-span-7">
+              <MetricsGrid current={current} />
+            </div>
+          </div>
           <HourlyForecast hourly={hourly} />
-          <DailyForecast daily={daily} />
           <Suspense fallback={<LoadingState />}>
             <WeatherCharts hourly={hourly} />
           </Suspense>
-        </>
+          <DailyForecast daily={daily} />
+        </div>
       );
     }
 
@@ -76,8 +82,10 @@ export function WeatherDashboard() {
   }
 
   return (
-    <div className="col-span-full flex flex-col gap-4">
-      <SearchBar onSelect={setCity} />
+    <div className="col-span-full flex flex-col gap-6">
+      <div className="rounded-card border border-line bg-surface p-4 shadow-card">
+        <SearchBar onSelect={setCity} />
+      </div>
       {renderWeather()}
     </div>
   );

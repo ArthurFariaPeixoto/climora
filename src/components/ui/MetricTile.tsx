@@ -28,21 +28,27 @@ export function MetricTile({
   const isHighlight = variant === 'highlight';
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="relative flex flex-col justify-between rounded-xl border border-line/70 bg-canvas/70 p-3.5 transition-colors hover:border-line hover:bg-canvas">
       {Icon ? (
-        <Icon
-          className={
-            isHighlight ? 'h-4 w-4 text-accent' : 'h-4 w-4 text-ink-soft'
-          }
-          aria-hidden="true"
-        />
+        <div className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-lg bg-surface shadow-2xs">
+          <Icon
+            className={
+              isHighlight
+                ? 'h-3.5 w-3.5 text-accent'
+                : 'h-3.5 w-3.5 text-ink-muted'
+            }
+            aria-hidden="true"
+          />
+        </div>
       ) : null}
-      <span className="text-sm text-ink-muted">{label}</span>
+      <span className="text-xs font-semibold tracking-wider text-ink-muted uppercase">
+        {label}
+      </span>
       <span
         className={
           isHighlight
-            ? 'text-2xl font-bold text-accent'
-            : 'text-lg font-semibold text-ink'
+            ? 'mt-3 text-2xl font-bold text-accent'
+            : 'mt-3 text-lg font-semibold text-ink'
         }
       >
         {value}

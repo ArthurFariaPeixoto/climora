@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from 'react';
 import type { FocusEvent, KeyboardEvent } from 'react';
+import { Search } from 'lucide-react';
 
 import { SearchResults } from '@/components/search/SearchResults';
 import { Button } from '@/components/ui/Button';
@@ -112,35 +113,45 @@ export function SearchBar({ onSelect }: SearchBarProps) {
         event.preventDefault();
         submit();
       }}
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-3"
       role="search"
     >
-      <div className="flex items-center gap-2">
-        <label htmlFor={inputId} className="text-sm font-medium">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <label htmlFor={inputId} className="text-sm font-semibold text-ink">
           Buscar cidade
         </label>
-        <input
-          id={inputId}
-          type="text"
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={handleInputBlur}
-          placeholder="Digite o nome de uma cidade"
-          role="combobox"
-          aria-expanded={open}
-          aria-controls={open ? listboxId : undefined}
-          aria-activedescendant={
-            open && activeIndex >= 0
-              ? `${listboxId}-option-${activeIndex}`
-              : undefined
-          }
-          aria-haspopup="listbox"
-          aria-autocomplete="list"
-          aria-busy={loading || undefined}
-          className="flex-1 rounded-control border border-line-strong px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        />
-        <Button type="submit">Buscar</Button>
+        <div className="relative flex flex-1 items-center gap-2">
+          <div className="relative flex flex-1 items-center">
+            <Search
+              className="pointer-events-none absolute left-3 h-4 w-4 text-ink-soft"
+              aria-hidden="true"
+            />
+            <input
+              id={inputId}
+              type="text"
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={handleInputBlur}
+              placeholder="Digite o nome de uma cidade"
+              role="combobox"
+              aria-expanded={open}
+              aria-controls={open ? listboxId : undefined}
+              aria-activedescendant={
+                open && activeIndex >= 0
+                  ? `${listboxId}-option-${activeIndex}`
+                  : undefined
+              }
+              aria-haspopup="listbox"
+              aria-autocomplete="list"
+              aria-busy={loading || undefined}
+              className="w-full rounded-control border border-line-strong bg-canvas py-2 pl-9 pr-3 text-sm text-ink placeholder:text-ink-soft transition-colors focus:bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            />
+          </div>
+          <Button type="submit" className="shrink-0 font-medium shadow-xs">
+            Buscar
+          </Button>
+        </div>
       </div>
 
       <div ref={panelRef}>

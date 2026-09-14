@@ -23,11 +23,17 @@ export function LoadingState({
       data-testid="loading-state"
       className="flex flex-col gap-4"
     >
-      <Skeleton className="h-28 w-full rounded-card" />
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(9rem,1fr))] gap-4">
-        <Skeleton className="h-20" />
-        <Skeleton className="h-20" />
-        <Skeleton className="h-20" />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <Skeleton className="h-28 w-full rounded-card" />
+        </div>
+        <div className="lg:col-span-7">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(9rem,1fr))] gap-3">
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+          </div>
+        </div>
       </div>
       <Skeleton className="h-16 w-full" />
       <Skeleton className="h-40 w-full" />

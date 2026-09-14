@@ -1,3 +1,5 @@
+import { Clock } from 'lucide-react';
+
 import type { HourlyForecast } from '@/models/HourlyForecast';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/state/EmptyState';
@@ -31,27 +33,38 @@ export function HourlyForecast({ hourly }: HourlyForecastProps) {
   return (
     <Card>
       <div className="flex h-full flex-col gap-3">
-        <h2 className="text-lg font-semibold">Previsão por hora</h2>
+        <div className="flex items-center justify-between border-b border-line/60 pb-1">
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-accent" aria-hidden="true" />
+            <h2 className="text-base font-semibold text-ink sm:text-lg">
+              Previsão por hora
+            </h2>
+          </div>
+          <span className="text-xs font-medium text-ink-muted">
+            Próximas horas (blocos de 3h)
+          </span>
+        </div>
+
         {hourly.length === 0 ? (
           <EmptyState message="Previsão horária indisponível." />
         ) : (
           <ul
             aria-label="Previsão por hora"
-            className="flex gap-2 overflow-x-auto pb-1"
+            className="custom-scrollbar flex gap-2.5 overflow-x-auto pb-2 pt-1"
           >
             {hourly.map((block) => (
               <li
                 key={block.time}
-                className="flex min-w-[4.5rem] flex-col items-center gap-1 rounded-lg border border-line p-2"
+                className="flex min-w-[5rem] flex-col items-center gap-1.5 rounded-xl border border-line/70 bg-canvas/60 p-2.5 transition-all hover:border-accent-line hover:bg-surface hover:shadow-2xs"
               >
-                <span className="text-xs text-ink-muted">
+                <span className="text-xs font-semibold text-ink-muted">
                   {formatHour(block.time)}
                 </span>
                 <ConditionIcon
                   condition={block.condition}
-                  className="h-6 w-6 text-ink-muted"
+                  className="my-0.5 h-6 w-6 text-accent"
                 />
-                <span className="text-sm font-semibold">
+                <span className="text-sm font-bold text-ink">
                   {formatTemperature(block.temperatureC)}
                 </span>
                 <span className={PRECIPITATION_CLASS}>

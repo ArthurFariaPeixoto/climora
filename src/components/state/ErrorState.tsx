@@ -53,12 +53,20 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
   return (
     <div
       role="alert"
-      className="flex flex-col items-center gap-4 p-4 text-center"
+      className="flex flex-col items-center justify-center gap-3 rounded-xl border border-danger/20 bg-danger/5 p-6 text-center"
     >
-      <Icon className="h-10 w-10 text-danger" aria-hidden="true" />
-      <p className="text-ink-muted">{getErrorMessage(error)}</p>
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-danger/10 text-danger shadow-2xs">
+        <Icon className="h-6 w-6 text-danger" aria-hidden="true" />
+      </div>
+      <p className="max-w-md text-sm font-medium text-ink-muted">
+        {getErrorMessage(error)}
+      </p>
       {canRetry ? (
-        <Button variant="secondary" onClick={onRetry}>
+        <Button
+          variant="secondary"
+          onClick={onRetry}
+          className="mt-1 font-semibold shadow-xs"
+        >
           Tentar novamente
         </Button>
       ) : null}

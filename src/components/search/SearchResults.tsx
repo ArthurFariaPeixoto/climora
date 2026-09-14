@@ -64,7 +64,7 @@ export function SearchResults({
         id={listboxId}
         role="listbox"
         aria-label="Cidades encontradas"
-        className="max-h-72 overflow-y-auto rounded-control border border-line bg-surface"
+        className="custom-scrollbar max-h-72 overflow-y-auto rounded-control border border-line bg-surface shadow-lg divide-y divide-line/60"
       >
         {cities.map((city, index) => (
           <SearchResultItem

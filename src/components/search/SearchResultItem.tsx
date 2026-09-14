@@ -32,11 +32,11 @@ export function SearchResultItem({
       aria-selected={active}
       onClick={() => onSelect(city)}
       onMouseEnter={onActivate}
-      className={`block w-full px-3 py-2 text-left text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+      className={`block w-full px-4 py-2.5 text-left text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
         active ? 'bg-accent-soft' : 'hover:bg-canvas'
       }`}
     >
-      <span className="font-medium">{city.name}</span>
+      <span className="font-semibold">{city.name}</span>
       {city.state ? (
         <span className="text-ink-muted">, {city.state}</span>
       ) : null}

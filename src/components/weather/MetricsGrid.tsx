@@ -43,41 +43,51 @@ export function MetricsGrid({ current }: MetricsGridProps) {
   const wind = `${formatWindSpeed(current.wind.speedKmh)} · ${formatWindDirection(current.wind.degree)}`;
 
   return (
-    <Card>
-      <div className="grid h-full grid-cols-[repeat(auto-fit,minmax(9rem,1fr))] gap-4">
-        <MetricTile
-          label="Umidade"
-          value={formatHumidity(current.humidityPct)}
-          icon={Droplets}
-        />
-        <MetricTile label="Vento" value={wind} icon={Wind} />
-        <MetricTile
-          label="Mínima"
-          value={formatTemperature(current.minC)}
-          icon={ArrowDown}
-        />
-        <MetricTile
-          label="Máxima"
-          value={formatTemperature(current.maxC)}
-          icon={ArrowUp}
-        />
-        <MetricTile
-          label="Pressão"
-          value={formatPressure(current.pressureHpa)}
-          icon={Gauge}
-        />
-        {current.precipitationPct !== undefined ? (
+    <Card className="h-full">
+      <div className="flex h-full flex-col justify-between gap-3">
+        <div className="flex items-center justify-between border-b border-line/60 pb-1">
+          <h2 className="text-base font-semibold text-ink">
+            Condições Atmosféricas
+          </h2>
+          <span className="text-xs font-medium text-ink-muted">
+            Métricas em tempo real
+          </span>
+        </div>
+        <div className="grid h-full grid-cols-[repeat(auto-fit,minmax(9rem,1fr))] gap-3">
           <MetricTile
-            label="Precipitação"
-            value={formatPrecipitation(current.precipitationPct)}
-            icon={Umbrella}
+            label="Umidade"
+            value={formatHumidity(current.humidityPct)}
+            icon={Droplets}
           />
-        ) : null}
-        <MetricTile
-          label="Visibilidade"
-          value={formatVisibility(current.visibilityKm)}
-          icon={Eye}
-        />
+          <MetricTile label="Vento" value={wind} icon={Wind} />
+          <MetricTile
+            label="Mínima"
+            value={formatTemperature(current.minC)}
+            icon={ArrowDown}
+          />
+          <MetricTile
+            label="Máxima"
+            value={formatTemperature(current.maxC)}
+            icon={ArrowUp}
+          />
+          <MetricTile
+            label="Pressão"
+            value={formatPressure(current.pressureHpa)}
+            icon={Gauge}
+          />
+          {current.precipitationPct !== undefined ? (
+            <MetricTile
+              label="Precipitação"
+              value={formatPrecipitation(current.precipitationPct)}
+              icon={Umbrella}
+            />
+          ) : null}
+          <MetricTile
+            label="Visibilidade"
+            value={formatVisibility(current.visibilityKm)}
+            icon={Eye}
+          />
+        </div>
       </div>
     </Card>
   );
