@@ -174,7 +174,10 @@ describe('useCitySearchQuery', () => {
           term,
           enabled: true,
         }),
-      { wrapper: cacheWrapper, initialProps: { term: SEARCH_TERM_WITH_RESULTS } },
+      {
+        wrapper: cacheWrapper,
+        initialProps: { term: SEARCH_TERM_WITH_RESULTS },
+      },
     );
 
     await act(async () => {
@@ -228,9 +231,7 @@ describe('useCitySearchQuery', () => {
       resolve([saoPauloCity]);
     });
 
-    await waitFor(() =>
-      expect(mockedSearchCities).toHaveBeenCalledTimes(1),
-    );
+    await waitFor(() => expect(mockedSearchCities).toHaveBeenCalledTimes(1));
   });
 
   it('keepPreviousData: ao trocar termo, dados antigos permanecem enquanto novo carrega', async () => {
@@ -246,7 +247,10 @@ describe('useCitySearchQuery', () => {
           term,
           enabled: true,
         }),
-      { wrapper: cacheWrapper, initialProps: { term: SEARCH_TERM_WITH_RESULTS } },
+      {
+        wrapper: cacheWrapper,
+        initialProps: { term: SEARCH_TERM_WITH_RESULTS },
+      },
     );
 
     await act(async () => {
@@ -267,7 +271,9 @@ describe('useCitySearchQuery', () => {
   it('refetch: dispara nova requisição e atualiza dados', async () => {
     mockedSearchCities
       .mockResolvedValueOnce([saoPauloCity])
-      .mockResolvedValueOnce([{ ...saoPauloCity, name: 'São Paulo Atualizado' }]);
+      .mockResolvedValueOnce([
+        { ...saoPauloCity, name: 'São Paulo Atualizado' },
+      ]);
 
     const { result } = renderHook(
       () =>

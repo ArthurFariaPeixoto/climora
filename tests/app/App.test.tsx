@@ -22,7 +22,9 @@ describe('App', () => {
       </QueryClientProvider>,
     );
 
-    expect(screen.getByRole('heading', { name: 'Climora' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Climora' }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('combobox', { name: 'Buscar cidade' }),
     ).toBeInTheDocument();

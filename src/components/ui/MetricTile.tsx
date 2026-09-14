@@ -31,7 +31,9 @@ export function MetricTile({
     <div className="flex flex-col gap-1">
       {Icon ? (
         <Icon
-          className={isHighlight ? 'h-4 w-4 text-accent' : 'h-4 w-4 text-ink-soft'}
+          className={
+            isHighlight ? 'h-4 w-4 text-accent' : 'h-4 w-4 text-ink-soft'
+          }
           aria-hidden="true"
         />
       ) : null}

@@ -71,7 +71,9 @@ describe('validateSearchTerm', () => {
       expect(result.valid).toBe(false);
       if (!result.valid) {
         expect(result.reason.kind).toBe('invalid-search');
-        expect(result.reason.message).toBe('Use apenas letras, espaços e hífens.');
+        expect(result.reason.message).toBe(
+          'Use apenas letras, espaços e hífens.',
+        );
       }
     });
 
@@ -80,7 +82,9 @@ describe('validateSearchTerm', () => {
       expect(result.valid).toBe(false);
       if (!result.valid) {
         expect(result.reason.kind).toBe('invalid-search');
-        expect(result.reason.message).toBe('Use apenas letras, espaços e hífens.');
+        expect(result.reason.message).toBe(
+          'Use apenas letras, espaços e hífens.',
+        );
       }
     });
 
@@ -89,7 +93,9 @@ describe('validateSearchTerm', () => {
       expect(result.valid).toBe(false);
       if (!result.valid) {
         expect(result.reason.kind).toBe('invalid-search');
-        expect(result.reason.message).toBe('Use apenas letras, espaços e hífens.');
+        expect(result.reason.message).toBe(
+          'Use apenas letras, espaços e hífens.',
+        );
       }
     });
   });
@@ -115,7 +121,7 @@ describe('validateSearchTerm', () => {
         if (!result.valid) {
           expect(result.reason.message).toBe('Digite pelo menos 3 caracteres.');
         }
-      }
+      },
     );
   });
 
@@ -124,7 +130,9 @@ describe('validateSearchTerm', () => {
       const result = validateSearchTerm('---');
       expect(result.valid).toBe(false);
       if (!result.valid) {
-        expect(result.reason.message).toBe('Use apenas letras, espaços e hífens.');
+        expect(result.reason.message).toBe(
+          'Use apenas letras, espaços e hífens.',
+        );
       }
     });
 
@@ -140,9 +148,11 @@ describe('validateSearchTerm', () => {
         const result = validateSearchTerm(term);
         expect(result.valid).toBe(false);
         if (!result.valid) {
-          expect(result.reason.message).toBe('Use apenas letras, espaços e hífens.');
+          expect(result.reason.message).toBe(
+            'Use apenas letras, espaços e hífens.',
+          );
         }
-      }
+      },
     );
   });
 
@@ -155,7 +165,9 @@ describe('validateSearchTerm', () => {
       const result = validateSearchTerm('Sa\u0303o123');
       expect(result.valid).toBe(false);
       if (!result.valid) {
-        expect(result.reason.message).toBe('Use apenas letras, espaços e hífens.');
+        expect(result.reason.message).toBe(
+          'Use apenas letras, espaços e hífens.',
+        );
       }
     });
   });
@@ -165,21 +177,21 @@ describe('validateSearchTerm', () => {
       'rejeita termo com whitespace interno %j',
       (term) => {
         expect(validateSearchTerm(term).valid).toBe(false);
-      }
+      },
     );
 
     it.each(['São\u200BPaulo', 'São\u00A0Paulo'])(
       'rejeita termo com espaço de largura zero/não quebrado %j',
       (term) => {
         expect(validateSearchTerm(term).valid).toBe(false);
-      }
+      },
     );
 
     it.each(['\u00A0abc\u00A0', '\u3000abc\u3000'])(
       'remove %j das bordas antes de validar',
       (term) => {
         expect(validateSearchTerm(term)).toEqual({ valid: true });
-      }
+      },
     );
 
     it.each(['São１Paulo', "D'Agosto", 'St. Louis'])(
@@ -188,9 +200,11 @@ describe('validateSearchTerm', () => {
         const result = validateSearchTerm(term);
         expect(result.valid).toBe(false);
         if (!result.valid) {
-          expect(result.reason.message).toBe('Use apenas letras, espaços e hífens.');
+          expect(result.reason.message).toBe(
+            'Use apenas letras, espaços e hífens.',
+          );
         }
-      }
+      },
     );
   });
 });

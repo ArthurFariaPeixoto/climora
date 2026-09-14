@@ -1,4 +1,12 @@
-import { ArrowDown, ArrowUp, Droplets, Eye, Gauge, Umbrella, Wind } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowUp,
+  Droplets,
+  Eye,
+  Gauge,
+  Umbrella,
+  Wind,
+} from 'lucide-react';
 
 import type { CurrentWeather } from '@/models/CurrentWeather';
 import { Card } from '@/components/ui/Card';

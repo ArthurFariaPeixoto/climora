@@ -43,7 +43,10 @@ export function groupHourlyByDay(hourly: HourlyForecast[]): DailyForecast[] {
     .map(([dayStart, blocks]) => deriveDaily(dayStart, blocks));
 }
 
-function deriveDaily(dayStart: number, blocks: HourlyForecast[]): DailyForecast {
+function deriveDaily(
+  dayStart: number,
+  blocks: HourlyForecast[],
+): DailyForecast {
   const temperatures = blocks.map((block) => block.temperatureC);
   return {
     date: dayStart,

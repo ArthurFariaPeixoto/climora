@@ -34,7 +34,9 @@ describe('SearchResultItem (fase 05 §3)', () => {
   it('foco visível consistente nas classes do botão (fase 08 §4)', () => {
     renderItem();
 
-    expect(screen.getByRole('option')).toHaveClass('focus-visible:outline-accent');
+    expect(screen.getByRole('option')).toHaveClass(
+      'focus-visible:outline-accent',
+    );
   });
 
   it('cidade sem state não exibe o campo (nem vírgula extra)', () => {
@@ -54,7 +56,10 @@ describe('SearchResultItem (fase 05 §3)', () => {
   it('aria-selected e classe de destaque refletem o estado active', () => {
     const { rerender } = renderItem();
 
-    expect(screen.getByRole('option')).toHaveAttribute('aria-selected', 'false');
+    expect(screen.getByRole('option')).toHaveAttribute(
+      'aria-selected',
+      'false',
+    );
 
     rerender(
       <SearchResultItem

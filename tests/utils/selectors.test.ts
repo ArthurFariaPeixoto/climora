@@ -1,35 +1,128 @@
 import { describe, expect, it } from 'vitest';
 
 import type { HourlyForecast } from '@/models/HourlyForecast';
-import {
-  groupHourlyByDay,
-  toHourlyChartData,
-} from '@/utils/selectors';
+import { groupHourlyByDay, toHourlyChartData } from '@/utils/selectors';
 import { formatHour } from '@/utils/format';
 
 const DAY_1_START = 1788739200; // 7 de setembro de 2026, 00:00 UTC
 const DAY_2_START = 1788825600; // 8 de setembro de 2026, 00:00 UTC
 
 const DAY_1_BLOCKS: HourlyForecast[] = [
-  block(DAY_1_START, { temperatureC: 16, humidityPct: 80, precipitationPct: 0, windSpeedKmh: 10, condition: 'Céu limpo' }),
-  block(DAY_1_START + 3 * 3600, { temperatureC: 15, humidityPct: 85, precipitationPct: 0, windSpeedKmh: 12, condition: 'Céu limpo' }),
-  block(DAY_1_START + 6 * 3600, { temperatureC: 15, humidityPct: 88, precipitationPct: 5, windSpeedKmh: 11, condition: 'Nuvens dispersas' }),
-  block(DAY_1_START + 9 * 3600, { temperatureC: 18, humidityPct: 75, precipitationPct: 20, windSpeedKmh: 9, condition: 'Nuvens dispersas' }),
-  block(DAY_1_START + 12 * 3600, { temperatureC: 22, humidityPct: 60, precipitationPct: 10, windSpeedKmh: 14, condition: 'Chuva leve' }),
-  block(DAY_1_START + 15 * 3600, { temperatureC: 23, humidityPct: 58, precipitationPct: 15, windSpeedKmh: 16, condition: 'Chuva leve' }),
-  block(DAY_1_START + 18 * 3600, { temperatureC: 20, humidityPct: 65, precipitationPct: 30, windSpeedKmh: 18, condition: 'Chuva leve' }),
-  block(DAY_1_START + 21 * 3600, { temperatureC: 17, humidityPct: 72, precipitationPct: 40, windSpeedKmh: 15, condition: 'Chuva leve' }),
+  block(DAY_1_START, {
+    temperatureC: 16,
+    humidityPct: 80,
+    precipitationPct: 0,
+    windSpeedKmh: 10,
+    condition: 'Céu limpo',
+  }),
+  block(DAY_1_START + 3 * 3600, {
+    temperatureC: 15,
+    humidityPct: 85,
+    precipitationPct: 0,
+    windSpeedKmh: 12,
+    condition: 'Céu limpo',
+  }),
+  block(DAY_1_START + 6 * 3600, {
+    temperatureC: 15,
+    humidityPct: 88,
+    precipitationPct: 5,
+    windSpeedKmh: 11,
+    condition: 'Nuvens dispersas',
+  }),
+  block(DAY_1_START + 9 * 3600, {
+    temperatureC: 18,
+    humidityPct: 75,
+    precipitationPct: 20,
+    windSpeedKmh: 9,
+    condition: 'Nuvens dispersas',
+  }),
+  block(DAY_1_START + 12 * 3600, {
+    temperatureC: 22,
+    humidityPct: 60,
+    precipitationPct: 10,
+    windSpeedKmh: 14,
+    condition: 'Chuva leve',
+  }),
+  block(DAY_1_START + 15 * 3600, {
+    temperatureC: 23,
+    humidityPct: 58,
+    precipitationPct: 15,
+    windSpeedKmh: 16,
+    condition: 'Chuva leve',
+  }),
+  block(DAY_1_START + 18 * 3600, {
+    temperatureC: 20,
+    humidityPct: 65,
+    precipitationPct: 30,
+    windSpeedKmh: 18,
+    condition: 'Chuva leve',
+  }),
+  block(DAY_1_START + 21 * 3600, {
+    temperatureC: 17,
+    humidityPct: 72,
+    precipitationPct: 40,
+    windSpeedKmh: 15,
+    condition: 'Chuva leve',
+  }),
 ];
 
 const DAY_2_BLOCKS: HourlyForecast[] = [
-  block(DAY_2_START, { temperatureC: 16, humidityPct: 70, precipitationPct: 10, windSpeedKmh: 8, condition: 'Céu limpo' }),
-  block(DAY_2_START + 3 * 3600, { temperatureC: 15, humidityPct: 75, precipitationPct: 5, windSpeedKmh: 7, condition: 'Céu limpo' }),
-  block(DAY_2_START + 6 * 3600, { temperatureC: 14, humidityPct: 80, precipitationPct: 0, windSpeedKmh: 6, condition: 'Nuvens dispersas' }),
-  block(DAY_2_START + 9 * 3600, { temperatureC: 19, humidityPct: 62, precipitationPct: 0, windSpeedKmh: 9, condition: 'Nuvens dispersas' }),
-  block(DAY_2_START + 12 * 3600, { temperatureC: 24, humidityPct: 50, precipitationPct: 0, windSpeedKmh: 12, condition: 'Céu limpo' }),
-  block(DAY_2_START + 15 * 3600, { temperatureC: 25, humidityPct: 48, precipitationPct: 0, windSpeedKmh: 13, condition: 'Céu limpo' }),
-  block(DAY_2_START + 18 * 3600, { temperatureC: 21, humidityPct: 55, precipitationPct: 0, windSpeedKmh: 10, condition: 'Céu limpo' }),
-  block(DAY_2_START + 21 * 3600, { temperatureC: 18, humidityPct: 60, precipitationPct: 5, windSpeedKmh: 9, condition: 'Céu limpo' }),
+  block(DAY_2_START, {
+    temperatureC: 16,
+    humidityPct: 70,
+    precipitationPct: 10,
+    windSpeedKmh: 8,
+    condition: 'Céu limpo',
+  }),
+  block(DAY_2_START + 3 * 3600, {
+    temperatureC: 15,
+    humidityPct: 75,
+    precipitationPct: 5,
+    windSpeedKmh: 7,
+    condition: 'Céu limpo',
+  }),
+  block(DAY_2_START + 6 * 3600, {
+    temperatureC: 14,
+    humidityPct: 80,
+    precipitationPct: 0,
+    windSpeedKmh: 6,
+    condition: 'Nuvens dispersas',
+  }),
+  block(DAY_2_START + 9 * 3600, {
+    temperatureC: 19,
+    humidityPct: 62,
+    precipitationPct: 0,
+    windSpeedKmh: 9,
+    condition: 'Nuvens dispersas',
+  }),
+  block(DAY_2_START + 12 * 3600, {
+    temperatureC: 24,
+    humidityPct: 50,
+    precipitationPct: 0,
+    windSpeedKmh: 12,
+    condition: 'Céu limpo',
+  }),
+  block(DAY_2_START + 15 * 3600, {
+    temperatureC: 25,
+    humidityPct: 48,
+    precipitationPct: 0,
+    windSpeedKmh: 13,
+    condition: 'Céu limpo',
+  }),
+  block(DAY_2_START + 18 * 3600, {
+    temperatureC: 21,
+    humidityPct: 55,
+    precipitationPct: 0,
+    windSpeedKmh: 10,
+    condition: 'Céu limpo',
+  }),
+  block(DAY_2_START + 21 * 3600, {
+    temperatureC: 18,
+    humidityPct: 60,
+    precipitationPct: 5,
+    windSpeedKmh: 9,
+    condition: 'Céu limpo',
+  }),
 ];
 
 describe('groupHourlyByDay', () => {
@@ -119,7 +212,9 @@ describe('groupHourlyByDay', () => {
   });
 
   it('trata um único bloco no início do dia', () => {
-    const result = groupHourlyByDay([block(DAY_1_START, { condition: 'Nevoeiro' })]);
+    const result = groupHourlyByDay([
+      block(DAY_1_START, { condition: 'Nevoeiro' }),
+    ]);
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
@@ -135,7 +230,9 @@ describe('groupHourlyByDay', () => {
 
   it('trata um único bloco no fim do dia', () => {
     const lateTime = DAY_1_START + 21 * 3600;
-    const result = groupHourlyByDay([block(lateTime, { condition: 'Tempestade' })]);
+    const result = groupHourlyByDay([
+      block(lateTime, { condition: 'Tempestade' }),
+    ]);
 
     expect(result).toHaveLength(1);
     expect(result[0].date).toBe(DAY_1_START);

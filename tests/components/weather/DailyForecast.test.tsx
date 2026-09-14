@@ -18,9 +18,7 @@ describe('DailyForecast (fase 06 §4)', () => {
     ).toBeInTheDocument();
 
     for (const day of dailyForecastModel) {
-      expect(
-        screen.getByText(formatWeekday(day.date)),
-      ).toBeInTheDocument();
+      expect(screen.getByText(formatWeekday(day.date))).toBeInTheDocument();
       expect(
         screen.getByText(
           `${formatTemperature(day.minC)} / ${formatTemperature(day.maxC)}`,
@@ -39,9 +37,7 @@ describe('DailyForecast (fase 06 §4)', () => {
   it('ícone reflete a condição de cada dia (categorias e descrições)', () => {
     const { container } = render(<DailyForecast daily={dailyForecastModel} />);
 
-    expect(
-      container.querySelector('.lucide-cloud-rain'),
-    ).toBeInTheDocument();
+    expect(container.querySelector('.lucide-cloud-rain')).toBeInTheDocument();
     expect(container.querySelector('.lucide-sun')).toBeInTheDocument();
   });
 
@@ -59,9 +55,7 @@ describe('DailyForecast (fase 06 §4)', () => {
       />,
     );
 
-    expect(
-      container.querySelector('.lucide-cloud-rain'),
-    ).toBeInTheDocument();
+    expect(container.querySelector('.lucide-cloud-rain')).toBeInTheDocument();
     expect(
       container.querySelector('.lucide-cloud-lightning'),
     ).toBeInTheDocument();

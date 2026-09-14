@@ -18,9 +18,17 @@ describe('ErrorState (fase 08 §2)', () => {
     ['network', 'lucide-wifi-off', 'Sem conexão com a internet.'],
     ['timeout', 'lucide-clock', 'A conexão está lenta. Tente novamente.'],
     ['not-found', 'lucide-map-pin-off', 'Cidade não encontrada.'],
-    ['unauthorized', 'lucide-key-round', 'Configuração inválida: verifique a chave de API.'],
+    [
+      'unauthorized',
+      'lucide-key-round',
+      'Configuração inválida: verifique a chave de API.',
+    ],
     ['server', 'lucide-cloud', 'Serviço indisponível, tente novamente.'],
-    ['invalid-data', 'lucide-triangle-alert', 'Dados incompletos. Tente novamente mais tarde.'],
+    [
+      'invalid-data',
+      'lucide-triangle-alert',
+      'Dados incompletos. Tente novamente mais tarde.',
+    ],
   ] as const)(
     'exibe o ícone de %s e a mensagem correspondente',
     (kind, iconClass, message) => {
@@ -34,7 +42,9 @@ describe('ErrorState (fase 08 §2)', () => {
   );
 
   it('ícone é decorativo (aria-hidden)', () => {
-    const { container } = render(<ErrorState error={{ kind: 'server', message: '' }} />);
+    const { container } = render(
+      <ErrorState error={{ kind: 'server', message: '' }} />,
+    );
     expect(container.querySelector('.lucide-cloud')).toHaveAttribute(
       'aria-hidden',
       'true',
@@ -44,7 +54,9 @@ describe('ErrorState (fase 08 §2)', () => {
   it('mostra retry apenas para erro transitório com onRetry', async () => {
     const user: UserEvent = userEvent.setup();
     const onRetry = vi.fn();
-    render(<ErrorState error={{ kind: 'server', message: '' }} onRetry={onRetry} />);
+    render(
+      <ErrorState error={{ kind: 'server', message: '' }} onRetry={onRetry} />,
+    );
 
     const retry = screen.getByRole('button', { name: 'Tentar novamente' });
     await user.click(retry);

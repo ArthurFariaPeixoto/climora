@@ -25,6 +25,8 @@ describe('EmptyState (fase 08 §2)', () => {
       <EmptyState message="Sem dados" icon={Inbox} />,
     );
     expect(container.querySelector('.lucide-inbox')).toBeInTheDocument();
-    expect(container.querySelector('.lucide-cloud-off')).not.toBeInTheDocument();
+    expect(
+      container.querySelector('.lucide-cloud-off'),
+    ).not.toBeInTheDocument();
   });
 });

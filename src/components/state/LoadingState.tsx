@@ -13,7 +13,9 @@ interface LoadingStateProps {
  * coerentes e grade fluida (ADR-08), centralizando a região de status
  * acessível (`role="status"` + `aria-label`).
  */
-export function LoadingState({ label = 'Carregando dados' }: LoadingStateProps) {
+export function LoadingState({
+  label = 'Carregando dados',
+}: LoadingStateProps) {
   return (
     <div
       role="status"

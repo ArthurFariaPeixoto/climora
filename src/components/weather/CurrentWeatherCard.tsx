@@ -1,9 +1,6 @@
 import type { CurrentWeather } from '@/models/CurrentWeather';
 import { Card } from '@/components/ui/Card';
-import {
-  formatObservedAt,
-  formatTemperature,
-} from '@/utils/format';
+import { formatObservedAt, formatTemperature } from '@/utils/format';
 import { ConditionIcon } from '@/components/weather/ConditionIcon';
 
 interface CurrentWeatherCardProps {
@@ -23,11 +20,16 @@ interface CurrentWeatherCardProps {
  * Widget fluido (ADR-08): ocupa o espaço dado pelo grid, sem conhecimento de
  * breakpoint. `cityName` é opcional (a composição decide quando exibi-lo).
  */
-export function CurrentWeatherCard({ current, cityName }: CurrentWeatherCardProps) {
+export function CurrentWeatherCard({
+  current,
+  cityName,
+}: CurrentWeatherCardProps) {
   return (
     <Card variant="highlight">
       <div className="flex h-full flex-col gap-3">
-        {cityName ? <h2 className="text-lg font-semibold">{cityName}</h2> : null}
+        {cityName ? (
+          <h2 className="text-lg font-semibold">{cityName}</h2>
+        ) : null}
         <div className="flex items-center gap-4">
           <ConditionIcon
             condition={current.condition}

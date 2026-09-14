@@ -11,7 +11,9 @@ import {
 
 describe('HourlyForecast (fase 06 §3)', () => {
   it('renderiza heading e blocos com hora, temperatura, precipitação e ícone', () => {
-    const { container } = render(<HourlyForecast hourly={hourlyForecastModel} />);
+    const { container } = render(
+      <HourlyForecast hourly={hourlyForecastModel} />,
+    );
 
     expect(
       screen.getByRole('heading', { name: 'Previsão por hora' }),
@@ -35,15 +37,13 @@ describe('HourlyForecast (fase 06 §3)', () => {
   });
 
   it('ícone reflete a condição de cada bloco (categorias da fixture)', () => {
-    const { container } = render(<HourlyForecast hourly={hourlyForecastModel} />);
+    const { container } = render(
+      <HourlyForecast hourly={hourlyForecastModel} />,
+    );
 
     expect(container.querySelector('.lucide-sun')).toBeInTheDocument();
-    expect(
-      container.querySelector('.lucide-cloud-rain'),
-    ).toBeInTheDocument();
-    expect(
-      container.querySelector('.lucide-cloud-fog'),
-    ).toBeInTheDocument();
+    expect(container.querySelector('.lucide-cloud-rain')).toBeInTheDocument();
+    expect(container.querySelector('.lucide-cloud-fog')).toBeInTheDocument();
   });
 
   it('ícone reflete descrições reais da API (texto pt-BR)', () => {
@@ -51,20 +51,28 @@ describe('HourlyForecast (fase 06 §3)', () => {
       <HourlyForecast
         hourly={[
           { ...hourlyForecastModel[0], condition: 'Céu limpo' },
-          { ...hourlyForecastModel[0], time: hourlyForecastModel[0].time + 3600, condition: 'Chuva leve' },
-          { ...hourlyForecastModel[0], time: hourlyForecastModel[0].time + 7200, condition: 'Nevoeiro' },
-          { ...hourlyForecastModel[0], time: hourlyForecastModel[0].time + 10800, condition: 'Tempestade' },
+          {
+            ...hourlyForecastModel[0],
+            time: hourlyForecastModel[0].time + 3600,
+            condition: 'Chuva leve',
+          },
+          {
+            ...hourlyForecastModel[0],
+            time: hourlyForecastModel[0].time + 7200,
+            condition: 'Nevoeiro',
+          },
+          {
+            ...hourlyForecastModel[0],
+            time: hourlyForecastModel[0].time + 10800,
+            condition: 'Tempestade',
+          },
         ]}
       />,
     );
 
     expect(container.querySelector('.lucide-sun')).toBeInTheDocument();
-    expect(
-      container.querySelector('.lucide-cloud-rain'),
-    ).toBeInTheDocument();
-    expect(
-      container.querySelector('.lucide-cloud-fog'),
-    ).toBeInTheDocument();
+    expect(container.querySelector('.lucide-cloud-rain')).toBeInTheDocument();
+    expect(container.querySelector('.lucide-cloud-fog')).toBeInTheDocument();
     expect(
       container.querySelector('.lucide-cloud-lightning'),
     ).toBeInTheDocument();
@@ -77,6 +85,8 @@ describe('HourlyForecast (fase 06 §3)', () => {
       'Previsão horária indisponível.',
     );
     expect(container.querySelectorAll('li').length).toBe(0);
-    expect(screen.queryByRole('heading', { name: 'Previsão por hora' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: 'Previsão por hora' }),
+    ).toBeInTheDocument();
   });
 });

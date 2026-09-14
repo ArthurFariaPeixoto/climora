@@ -267,6 +267,8 @@ describe('formatObservedAt', () => {
   });
 
   it('formata o último minuto do ano', () => {
-    expect(formatObservedAt(1798761540)).toBe('31 de dezembro de 2026 às 23:59');
+    expect(formatObservedAt(1798761540)).toBe(
+      '31 de dezembro de 2026 às 23:59',
+    );
   });
 });

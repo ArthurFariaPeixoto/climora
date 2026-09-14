@@ -25,14 +25,18 @@ export function mapCityDtoToModel(dto: GeocodingLocationDto): City {
 
 function requireText(value: string, field: string): string {
   if (typeof value !== 'string' || value.trim().length === 0) {
-    throw invalidDataError(`Campo "${field}" inválido em resposta de geocodificação.`);
+    throw invalidDataError(
+      `Campo "${field}" inválido em resposta de geocodificação.`,
+    );
   }
   return value;
 }
 
 function requireFinite(value: number, field: string): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) {
-    throw invalidDataError(`Campo "${field}" inválido em resposta de geocodificação.`);
+    throw invalidDataError(
+      `Campo "${field}" inválido em resposta de geocodificação.`,
+    );
   }
   return value;
 }

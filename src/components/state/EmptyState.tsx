@@ -14,9 +14,15 @@ interface EmptyStateProps {
  * (busca sem cidades, cidade sem previsão). Região de status acessível
  * (`role="status"`) com ícone decorativo `aria-hidden`.
  */
-export function EmptyState({ message, icon: Icon = CloudOff }: EmptyStateProps) {
+export function EmptyState({
+  message,
+  icon: Icon = CloudOff,
+}: EmptyStateProps) {
   return (
-    <div role="status" className="flex flex-col items-center gap-2 p-4 text-center">
+    <div
+      role="status"
+      className="flex flex-col items-center gap-2 p-4 text-center"
+    >
       <Icon className="h-8 w-8 text-ink-soft" aria-hidden="true" />
       <span className="text-ink-muted">{message}</span>
     </div>

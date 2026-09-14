@@ -99,7 +99,10 @@ beforeEach(() => {
 
 /** Digita, submete a busca e seleciona a primeira cidade (São Paulo). */
 async function searchAndSelect() {
-  await user.type(screen.getByRole('combobox', { name: 'Buscar cidade' }), 'são paulo');
+  await user.type(
+    screen.getByRole('combobox', { name: 'Buscar cidade' }),
+    'são paulo',
+  );
   await user.click(screen.getByRole('button', { name: 'Buscar' }));
   await user.click(screen.getByRole('option', { name: /são paulo/i }));
 }
@@ -128,7 +131,9 @@ describe('WeatherDashboard (fase 07 §1)', () => {
     await searchAndSelect();
 
     expect(mockedUseWeather).toHaveBeenCalledWith(SAO_PAULO_WEATHER);
-    expect(screen.getByRole('heading', { name: 'São Paulo' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'São Paulo' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('Sensação térmica de 22°C')).toBeInTheDocument();
     expect(screen.getByText('65%')).toBeInTheDocument();
     expect(screen.getByText('1013 hPa')).toBeInTheDocument();

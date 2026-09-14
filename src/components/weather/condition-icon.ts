@@ -76,7 +76,9 @@ export function getConditionIcon(
 
 function getConditionIconFromModel(condition: WeatherCondition): LucideIcon {
   const byGroup = ICON_BY_GROUP[Math.floor(condition.id / 100)];
-  return byGroup ?? ICON_BY_ID[condition.id] ?? ICON_BY_MAIN[condition.main] ?? Cloud;
+  return (
+    byGroup ?? ICON_BY_ID[condition.id] ?? ICON_BY_MAIN[condition.main] ?? Cloud
+  );
 }
 
 /** Resolve o ícone a partir de um texto de condição (descrição ou categoria). */

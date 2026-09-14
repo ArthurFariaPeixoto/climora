@@ -2,14 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { CurrentWeatherCard } from '@/components/weather/CurrentWeatherCard';
-import {
-  currentWeatherModel,
-  currentWeatherRainModel,
-} from '@/mocks/fixtures';
-import {
-  formatObservedAt,
-  formatTemperature,
-} from '@/utils/format';
+import { currentWeatherModel, currentWeatherRainModel } from '@/mocks/fixtures';
+import { formatObservedAt, formatTemperature } from '@/utils/format';
 
 describe('CurrentWeatherCard (fase 06 §1)', () => {
   it('renderiza cidade, temperatura, sensação térmica, condição e observação', () => {
@@ -46,9 +40,7 @@ describe('CurrentWeatherCard (fase 06 §1)', () => {
     );
 
     expect(container.querySelector('.lucide-sun')).not.toBeInTheDocument();
-    expect(
-      container.querySelector('.lucide-cloud-rain'),
-    ).toBeInTheDocument();
+    expect(container.querySelector('.lucide-cloud-rain')).toBeInTheDocument();
   });
 
   it('não renderiza heading de cidade quando cityName é omitido', () => {

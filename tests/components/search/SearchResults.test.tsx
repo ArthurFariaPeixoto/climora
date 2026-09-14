@@ -2,7 +2,10 @@ import { render, screen } from '@testing-library/react';
 import userEvent, { type UserEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { SearchResults, type SearchResultsProps } from '@/components/search/SearchResults';
+import {
+  SearchResults,
+  type SearchResultsProps,
+} from '@/components/search/SearchResults';
 import { citySearchResultsModel, saoPauloCity } from '@/mocks/fixtures';
 import type { City } from '@/models/City';
 import type { AppError } from '@/utils/errors';
@@ -99,9 +102,9 @@ describe('SearchResults (fase 05 §2)', () => {
 
   it('success: cidade sem state não exibe vírgula extra', () => {
     renderResults();
-    expect(screen.getByRole('option', { name: /Rio de Janeiro/ })).toHaveTextContent(
-      'Rio de Janeiro, BR',
-    );
+    expect(
+      screen.getByRole('option', { name: /Rio de Janeiro/ }),
+    ).toHaveTextContent('Rio de Janeiro, BR');
   });
 
   it('aria-selected reflete o item ativo da navegação por teclado', () => {

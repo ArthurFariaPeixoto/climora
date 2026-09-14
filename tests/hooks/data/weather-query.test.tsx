@@ -236,12 +236,10 @@ describe('useWeatherQuery', () => {
   });
 
   it('refetch: dispara nova requisição e atualiza dados', async () => {
-    mockedGetWeather
-      .mockResolvedValueOnce(baseResult)
-      .mockResolvedValueOnce({
-        current: { ...currentWeatherModel, temperatureC: 31 },
-        hourly: hourlyForecastModel,
-      });
+    mockedGetWeather.mockResolvedValueOnce(baseResult).mockResolvedValueOnce({
+      current: { ...currentWeatherModel, temperatureC: 31 },
+      hourly: hourlyForecastModel,
+    });
 
     const { result } = renderHook(
       () =>

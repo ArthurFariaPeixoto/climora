@@ -1,6 +1,9 @@
 import { mapCityDtoToModel } from '@/services/adapters/city.adapter';
 import type { GeocodingLocationDto } from '@/services/dtos';
-import { GEOCODING_PATH, buildCitySearchQuery } from '@/services/endpoints/endpoints';
+import {
+  GEOCODING_PATH,
+  buildCitySearchQuery,
+} from '@/services/endpoints/endpoints';
 import { apiClient } from '@/services/http/api-client';
 import type { City } from '@/models/City';
 import type { NotFoundError } from '@/utils/errors';

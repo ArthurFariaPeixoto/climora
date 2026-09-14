@@ -23,17 +23,27 @@ describe('MetricsGrid (fase 06 §2)', () => {
     const wind = `${formatWindSpeed(currentWeatherModel.wind.speedKmh)} · ${formatWindDirection(currentWeatherModel.wind.degree)}`;
 
     expect(screen.getByText('Umidade')).toBeInTheDocument();
-    expect(screen.getByText(formatHumidity(currentWeatherModel.humidityPct))).toBeInTheDocument();
+    expect(
+      screen.getByText(formatHumidity(currentWeatherModel.humidityPct)),
+    ).toBeInTheDocument();
     expect(screen.getByText('Vento')).toBeInTheDocument();
     expect(screen.getByText(wind)).toBeInTheDocument();
     expect(screen.getByText('Mínima')).toBeInTheDocument();
-    expect(screen.getByText(formatTemperature(currentWeatherModel.minC))).toBeInTheDocument();
+    expect(
+      screen.getByText(formatTemperature(currentWeatherModel.minC)),
+    ).toBeInTheDocument();
     expect(screen.getByText('Máxima')).toBeInTheDocument();
-    expect(screen.getByText(formatTemperature(currentWeatherModel.maxC))).toBeInTheDocument();
+    expect(
+      screen.getByText(formatTemperature(currentWeatherModel.maxC)),
+    ).toBeInTheDocument();
     expect(screen.getByText('Pressão')).toBeInTheDocument();
-    expect(screen.getByText(formatPressure(currentWeatherModel.pressureHpa))).toBeInTheDocument();
+    expect(
+      screen.getByText(formatPressure(currentWeatherModel.pressureHpa)),
+    ).toBeInTheDocument();
     expect(screen.getByText('Visibilidade')).toBeInTheDocument();
-    expect(screen.getByText(formatVisibility(currentWeatherModel.visibilityKm))).toBeInTheDocument();
+    expect(
+      screen.getByText(formatVisibility(currentWeatherModel.visibilityKm)),
+    ).toBeInTheDocument();
 
     expect(container.querySelector('.lucide-droplets')).toBeInTheDocument();
     expect(container.querySelector('.lucide-wind')).toBeInTheDocument();
@@ -58,7 +68,9 @@ describe('MetricsGrid (fase 06 §2)', () => {
     expect(screen.getByText('Precipitação')).toBeInTheDocument();
     expect(
       screen.getByText(
-        formatPrecipitation(currentWeatherWithPrecipModel.precipitationPct ?? 0),
+        formatPrecipitation(
+          currentWeatherWithPrecipModel.precipitationPct ?? 0,
+        ),
       ),
     ).toBeInTheDocument();
     expect(container.querySelector('.lucide-umbrella')).toBeInTheDocument();

@@ -68,7 +68,9 @@ function mapWind(wind: WindDto): CurrentWeather['wind'] {
   };
 }
 
-function requireNonEmptyWeather(weather: WeatherConditionDto[]): WeatherConditionDto {
+function requireNonEmptyWeather(
+  weather: WeatherConditionDto[],
+): WeatherConditionDto {
   if (!Array.isArray(weather) || weather.length === 0) {
     throw invalidDataError('Resposta sem condição meteorológica.');
   }

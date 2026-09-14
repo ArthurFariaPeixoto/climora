@@ -66,6 +66,8 @@ describe('WeatherCharts (fase 06 §5)', () => {
     expect(screen.getByRole('status')).toHaveTextContent(
       'Gráfico indisponível.',
     );
-    expect(container.querySelector('.recharts-surface')).not.toBeInTheDocument();
+    expect(
+      container.querySelector('.recharts-surface'),
+    ).not.toBeInTheDocument();
   });
 });

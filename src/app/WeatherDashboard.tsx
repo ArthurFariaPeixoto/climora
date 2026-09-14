@@ -44,15 +44,14 @@ export function WeatherDashboard() {
     ? { lat: city.lat, lon: city.lon, scope: 'current+forecast' }
     : null;
 
-  const { status, current, hourly, daily, error, refetch } = useWeather(request);
+  const { status, current, hourly, daily, error, refetch } =
+    useWeather(request);
 
   function renderWeather() {
     if (status === 'loading') return <LoadingState />;
 
     if (status === 'error' && error !== null) {
-      return (
-        <ErrorState error={error} onRetry={() => void refetch()} />
-      );
+      return <ErrorState error={error} onRetry={() => void refetch()} />;
     }
 
     if (status === 'empty') {

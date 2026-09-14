@@ -14,7 +14,9 @@ vi.mock('@/hooks/use-city-search', () => ({
 
 const mockedUseCitySearch = vi.mocked(useCitySearch);
 
-function result(overrides: Partial<UseCitySearchResult> = {}): UseCitySearchResult {
+function result(
+  overrides: Partial<UseCitySearchResult> = {},
+): UseCitySearchResult {
   return {
     status: 'idle',
     cities: [],
@@ -64,7 +66,10 @@ describe('SearchBar (fase 05 §1)', () => {
     renderSearchBar();
 
     expect(combobox()).toBeInTheDocument();
-    expect(combobox()).toHaveAttribute('placeholder', 'Digite o nome de uma cidade');
+    expect(combobox()).toHaveAttribute(
+      'placeholder',
+      'Digite o nome de uma cidade',
+    );
     expect(combobox()).toHaveAttribute('aria-haspopup', 'listbox');
     expect(combobox()).toHaveAttribute('aria-expanded', 'false');
     expect(combobox()).toHaveClass('focus-visible:outline-accent');
@@ -110,13 +115,19 @@ describe('SearchBar (fase 05 §1)', () => {
     await user.keyboard('{Enter}');
     await user.keyboard('{ArrowDown}');
 
-    expect(combobox().getAttribute('aria-activedescendant')).toMatch(/-option-0$/);
+    expect(combobox().getAttribute('aria-activedescendant')).toMatch(
+      /-option-0$/,
+    );
 
     await user.keyboard('{ArrowDown}');
-    expect(combobox().getAttribute('aria-activedescendant')).toMatch(/-option-1$/);
+    expect(combobox().getAttribute('aria-activedescendant')).toMatch(
+      /-option-1$/,
+    );
 
     await user.keyboard('{ArrowUp}');
-    expect(combobox().getAttribute('aria-activedescendant')).toMatch(/-option-0$/);
+    expect(combobox().getAttribute('aria-activedescendant')).toMatch(
+      /-option-0$/,
+    );
   });
 
   it('Enter sem item destacado submete a busca', async () => {

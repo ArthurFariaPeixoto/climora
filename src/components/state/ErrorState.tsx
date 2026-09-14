@@ -1,4 +1,12 @@
-import { Cloud, Clock, KeyRound, MapPinOff, SearchX, TriangleAlert, WifiOff } from 'lucide-react';
+import {
+  Cloud,
+  Clock,
+  KeyRound,
+  MapPinOff,
+  SearchX,
+  TriangleAlert,
+  WifiOff,
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
@@ -43,7 +51,10 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
   const canRetry = onRetry !== undefined && isRetryableAppError(error);
 
   return (
-    <div role="alert" className="flex flex-col items-center gap-4 p-4 text-center">
+    <div
+      role="alert"
+      className="flex flex-col items-center gap-4 p-4 text-center"
+    >
       <Icon className="h-10 w-10 text-danger" aria-hidden="true" />
       <p className="text-ink-muted">{getErrorMessage(error)}</p>
       {canRetry ? (

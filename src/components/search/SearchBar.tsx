@@ -103,7 +103,8 @@ export function SearchBar({ onSelect }: SearchBarProps) {
   }
 
   const loading = status === 'loading';
-  const canRetry = status === 'error' && error !== null && isRetryableAppError(error);
+  const canRetry =
+    status === 'error' && error !== null && isRetryableAppError(error);
 
   return (
     <form
