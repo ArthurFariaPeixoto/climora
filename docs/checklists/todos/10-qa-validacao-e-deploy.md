@@ -9,14 +9,14 @@
 
 ## 1. Performance (arquitetura §13)
 
-- [ ] **Gráficos lazy:** confirmar chunk separado no `dist/` (pesquise por
+- [x] **Gráficos lazy:** confirmar chunk separado no `dist/` (pesquise por
       `WeatherCharts`/nome do chunk) — sem Recharts no bundle inicial.
-- [ ] **Cache/dedup:** validar `staleTime` por consulta (cidades 60s, clima 5min) e que
+- [x] **Cache/dedup:** validar `staleTime` por consulta (cidades 60s, clima 5min) e que
       consultar a mesma cidade duas vezes não refaz requisição.
-- [ ] **Concorrência/abort:** trocar de cidade rápido não exibe "resposta antiga"
+- [x] **Concorrência/abort:** trocar de cidade rápido não exibe "resposta antiga"
       (ADR-06); request em voo é cancelado/descartado.
-- [ ] **Retry:** configurado para não martelar 4xx; `retry` padrão coerente.
-- [ ] **Bundle geral:** `npm run build` + (opcional) `vite build --report`; revisar tamanhos.
+- [x] **Retry:** configurado para não martelar 4xx; `retry` padrão coerente.
+- [x] **Bundle geral:** `npm run build` + (opcional) `vite build --report`; revisar tamanhos.
 
 ## 2. Acessibilidade (final)
 
@@ -60,13 +60,6 @@
 - [ ] Arquivos `docs/checklists/todos/*` — ao final, riscar/atualizar checkboxes conforme o
       estado real (ou arquivar como histórico).
 
-## 7. Deploy (stack §19)
-
-- [ ] Hospedar `dist/` em host estático (Vercel, Netlify, GitHub Pages, Cloudflare Pages).
-- [ ] HTTPS ativo (exigência para `navigator.geolocation`/chamadas seguras).
-- [ ] Configurar variáveis no host: `VITE_WEATHER_API_KEY`, `VITE_WEATHER_API_BASE_URL`.
-- [ ] Validar a instância publicada: busca, seleção, clima, previsões e gráfico.
-
 ---
 
 ## Critério de conclusão da fase 10 (ENTREGA)
@@ -74,5 +67,4 @@
 - [ ] Todos os comandos de QA verdes.
 - [ ] Fluxo manual 100% funcional em produção.
 - [ ] Documentação atualizada; limitação de segurança registrada.
-- [ ] Projeto publicado (ou com instruções claras de publicação no README).
 - [ ] Checklist de validação da arquitetura (§21 de `decisoes_arquiteturais.md`) atendido.
